@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import styles from "../../styles/footer.module.css"; // Import styles for footer
 
 function Footer() {
   return (
-    <footer className="bg-light py-5">
+    <footer className={styles.footer}>
       <div className="container text-center">
         <Image
           src="/logo.svg"
@@ -30,7 +31,7 @@ function Footer() {
             "Privacy Policy",
           ].map((item, index) => (
             <li key={index} className="list-inline-item mx-2">
-              <a className="footer-link" href="#">
+              <a className={styles.footerLink} href="#">
                 {item}
               </a>
             </li>
@@ -39,22 +40,42 @@ function Footer() {
 
         <ul className="list-inline">
           <li className="list-inline-item mx-2">
-            <a href="#" target="_blank" rel="noreferrer" className="text-dark">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className={`${styles.icon} ${styles.facebook}`}
+            >
               <i className="bi bi-facebook fs-4"></i>
             </a>
           </li>
           <li className="list-inline-item mx-2">
-            <a href="#" target="_blank" rel="noreferrer" className="text-dark">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className={`${styles.icon} ${styles.instagram}`}
+            >
               <i className="bi bi-instagram fs-4"></i>
             </a>
           </li>
           <li className="list-inline-item mx-2">
-            <a href="#" target="_blank" rel="noreferrer" className="text-dark">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className={`${styles.icon} ${styles.twitter}`}
+            >
               <i className="bi bi-twitter fs-4"></i>
             </a>
           </li>
           <li className="list-inline-item mx-2">
-            <a href="#" target="_blank" rel="noreferrer" className="text-dark">
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className={`${styles.icon} ${styles.linkedin}`}
+            >
               <i className="bi bi-linkedin fs-4"></i>
             </a>
           </li>
@@ -64,44 +85,6 @@ function Footer() {
           © 2025 Doctor Appointment Service. All Rights Reserved.
         </p>
       </div>
-
-      <style jsx>{`
-        /* Footer link styles */
-        .list-inline .footer-link {
-          color: #000;
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
-
-        .list-inline .footer-link:hover {
-          color: #00675b;
-        }
-
-        /* Icon styles */
-        .list-inline-item i {
-          font-size: 1.5rem;
-          color: #000;
-          transition: color 0.3s ease;
-        }
-
-        .list-inline-item i:hover {
-          color: #008080;
-        }
-
-        /* General footer styles */
-        footer {
-          background-color: #f8f9fa;
-          padding: 50px 0;
-        }
-
-        footer .container {
-          text-align: center;
-        }
-
-        .list-inline-item {
-          margin: 0 10px;
-        }
-      `}</style>
     </footer>
   );
 }

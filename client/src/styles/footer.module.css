@@ -1,0 +1,53 @@
+/* Footer link styles */
+.footerLink {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footerLink:hover {
+    color: #00675b;
+  }
+  
+  /* Icon styles */
+  .icon {
+    font-size: 1.5rem;
+    color: #000;
+    transition: color 0.3s ease;
+  }
+  
+  .icon:hover {
+    color: #008080;
+  }
+  
+  /* Specific Icon Colors */
+  .facebook:hover {
+    color: #3b5998; /* Facebook color */
+  }
+  
+  .instagram:hover {
+    color: #e4405f; /* Instagram color */
+  }
+  
+  .twitter:hover {
+    color: #1da1f2; /* Twitter color */
+  }
+  
+  .linkedin:hover {
+    color: #0077b5; /* LinkedIn color */
+  }
+  
+  /* General footer styles */
+  .footer {
+    background-color: #f8f9fa;
+    padding: 50px 0;
+  }
+  
+  .footer .container {
+    text-align: center;
+  }
+  
+  .list-inline-item {
+    margin: 0 10px;
+  }
+  
