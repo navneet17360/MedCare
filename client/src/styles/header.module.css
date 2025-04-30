@@ -30,3 +30,32 @@
   background-color: #00675b;
   transform: scale(1.05); /* ✅ Added scale effect */
 }
+/* page.module.css */
+.linkText {
+  text-decoration: none;
+  color: #20b2aa;
+  transition: all 0.3s ease-in-out;
+}
+
+.linkText:hover {
+  color: #008080;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* Button styling */
+.getStarted {
+  background-color: #20b2aa; /* Light Teal */
+  color: white; /* White text */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Adjust padding for button size */
+  border-radius: 25px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect */
+.getStarted:hover {
+  background-color: #00675b; /* Dark Teal */
+}
