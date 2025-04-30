@@ -1,5 +1,11 @@
 /* page.module.css */
-
+.authContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 120px; /* Prevent layout shifts */
+  height: 40px;
+}
 .linkText {
   text-decoration: none;
   color: #20b2aa;
