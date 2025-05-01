@@ -1,0 +1,79 @@
+.doctorsList {
+  padding: 40px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 30px;
+}
+
+.doctorCard {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  width: 250px;
+  text-align: center;
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px; /* Ensures consistent card height */
+}
+
+.doctorCard:hover {
+  background-color: #e0f7fa;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cardContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageContainer {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.doctorImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.doctorCard h5 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 20px;
+  color: #333;
+}
+
+.doctorCard p {
+  color: #555;
+  font-size: 1rem;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+.doctorCard:hover h5,
+.doctorCard:hover p {
+  color: #00796b;
+}

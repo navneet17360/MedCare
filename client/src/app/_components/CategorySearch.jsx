@@ -1,20 +1,58 @@
 import React from "react";
+import styles from "../../styles/categorySearch.module.css";
 
 function CategorySearch() {
-    return (
-        <div className="px-5 my-5 d-flex align-items-center flex-column gap-2">
-            <h2 className="fw-bold ps-3 display-6 mb-0">Search &nbsp;
-                <span style={{ color: "#20b2aa" }}>Doctors</span>
-            </h2>
-            <p className="fs-4 ps-3 text-muted mb-0">Search, select, and schedule your doctor’s appointment in  just a few clicks.</p>
+  const specialties = [
+    { name: "Dentist", icon: "/icons/tooth.svg" },
+    { name: "Cardiologist", icon: "/icons/heart.svg" },
+    { name: "Orthopedic", icon: "/icons/bone.svg" },
+    { name: "Neurologist", icon: "/icons/brain.svg" },
+    { name: "Otology", icon: "/icons/ear.svg" },
+    { name: "Physician", icon: "/icons/physician.svg" },
+    { name: "Ophthalmologist", icon: "/icons/eye.svg" },
+  ];
 
-            <div className="d-flex w-100 align-items-center justify-content-center gap-2">
-                <input type="text" placeholder="Start your search..." className="rounded-2 border border-none" style={{width:"20%"}}/>
-                <button type="submit" className="btn text-white" style={{ backgroundColor: "#20b2aa" }}>Search</button>
-            </div>
+  return (
+    <div className="px-5 my-5 d-flex align-items-center flex-column gap-2">
+      <h2 className="fw-bold ps-3 display-6 mb-0">
+        Search <span style={{ color: "#20b2aa" }}>Doctors</span>
+      </h2>
+      <p className="fs-4 ps-3 text-muted mb-0">
+        Search, select, and schedule your doctor’s appointment in just a few
+        clicks.
+      </p>
 
-        </div>
-    )
+      <div className="d-flex w-100 align-items-center justify-content-center gap-2 mt-4">
+        <input
+          type="text"
+          placeholder="Start your search..."
+          className={`rounded-2 border border-0 ${styles.searchInput}`}
+          style={{ width: "20%", padding: "8px" }}
+        />
+        <button
+          type="submit"
+          className={`btn text-white ${styles.searchButton}`}
+          style={{ backgroundColor: "#20b2aa", padding: "8px 16px" }}
+        >
+          Search
+        </button>
+      </div>
+
+      <div className={styles.specialtiesContainer}>
+        {specialties.map((specialty, index) => (
+          <div key={index} className={styles.specialtyCard}>
+            <img
+              src={specialty.icon}
+              alt={specialty.name}
+              width="40"
+              height="40"
+            />
+            <span className={styles.specialtyName}>{specialty.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default CategorySearch;

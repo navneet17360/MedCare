@@ -3,15 +3,21 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton, useAuth } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useAuth,
+} from "@clerk/nextjs";
 import styles from "../../styles/header.module.css";
 
 function Header() {
-  const { isLoaded } = useAuth(); // Check if auth state is loaded
+  const { isLoaded } = useAuth();
   const Menu = [
     { id: 1, name: "Home", path: "/" },
-    { id: 2, name: "Explore", path: "/" },
-    { id: 3, name: "Contact Us", path: "/" },
+    { id: 2, name: "Explore", path: "/explore" },
+    { id: 3, name: "Contact Us", path: "/contact-us" },
   ];
 
   return (
@@ -23,7 +29,9 @@ function Header() {
       }}
     >
       <div className="d-flex align-items-center gap-6">
-        <Image src="/logo.svg" alt="logo" width={180} height={80} />
+        <Link href="/">
+          <Image src="/logo.svg" alt="logo" width={180} height={80} />
+        </Link>
         <ul className="d-none d-md-flex gap-3 list-unstyled">
           {Menu.map((item) => (
             <li className={styles.listItem} key={item.id}>
@@ -39,7 +47,7 @@ function Header() {
           <>
             <SignedOut>
               <SignInButton mode="modal">
-                <button className={styles.getStarted}>Get started</button>
+                <button className={styles.getStarted}>Get Started</button>
               </SignInButton>
             </SignedOut>
             <SignedIn>
@@ -48,7 +56,7 @@ function Header() {
           </>
         ) : (
           <button className={styles.getStarted} disabled>
-            Loading...
+            Get Started
           </button>
         )}
       </div>

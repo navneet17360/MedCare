@@ -22,20 +22,15 @@ function Footer() {
         </p>
 
         <ul className="list-inline mb-4">
-          {[
-            "Home",
-            "Find a Doctor",
-            "Book Appointment",
-            "Patient Portal",
-            "Contact Us",
-            "Privacy Policy",
-          ].map((item, index) => (
-            <li key={index} className="list-inline-item mx-2">
-              <a className={styles.footerLink} href="#">
-                {item}
-              </a>
-            </li>
-          ))}
+          {["Home", "Find a Doctor", "Book Appointment", "Contact Us"].map(
+            (item, index) => (
+              <li key={index} className="list-inline-item mx-2">
+                <a className={styles.footerLink} href="#">
+                  {item}
+                </a>
+              </li>
+            )
+          )}
         </ul>
 
         <ul className="list-inline">
@@ -81,9 +76,7 @@ function Footer() {
           </li>
         </ul>
 
-        <p className="text-muted mt-4">
-          © 2025 Doctor Appointment Service. All Rights Reserved.
-        </p>
+        <p className="text-muted mt-4">© 2025 MedCare All Rights Reserved.</p>
       </div>
     </footer>
   );
