@@ -1,14 +1,16 @@
 from flask import Flask
-
+from flask_cors import CORS  # Import CORS
 from config import Config
-from extensions import db  # <<< Import from extensions
-
+from extensions import db
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    db.init_app(app)  # <<< Important
+    # Initialize CORS
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Allow React frontend origin
+
+    db.init_app(app)
 
     # Import and register blueprints
     from routes.appointment_routes import appointment_bp
