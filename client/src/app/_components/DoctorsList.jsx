@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import styles from "../../styles/doctorsList.module.css";
 
 const doctors = [
@@ -10,6 +11,7 @@ const doctors = [
     image: "doctors/doc1.avif",
     yearsOfExperience: 15,
     hospital: "AIIMS, New Delhi",
+    about: "Dr. Ramesh Kumar is a leading cardiologist with expertise in interventional cardiology and heart failure management. He is committed to advancing cardiac care through research and patient-centered treatment."
   },
   {
     id: 2,
@@ -18,6 +20,7 @@ const doctors = [
     image: "doctors/doc2.avif",
     yearsOfExperience: 10,
     hospital: "Fortis Healthcare, Mumbai",
+    about: "Dr. Aarya Sharma specializes in pediatric care, focusing on preventive medicine and developmental disorders. She is known for her compassionate approach and dedication to children's health."
   },
   {
     id: 3,
@@ -26,6 +29,7 @@ const doctors = [
     image: "doctors/doc3.avif",
     yearsOfExperience: 20,
     hospital: "Max Hospital, Delhi",
+    about: "Dr. Sunil Gupta is an expert in orthopedic surgery, with a focus on joint replacement and sports injuries. He has performed over 5,000 successful surgeries in his career."
   },
   {
     id: 4,
@@ -34,6 +38,7 @@ const doctors = [
     image: "doctors/doc4.avif",
     yearsOfExperience: 12,
     hospital: "NIMHANS, Bangalore",
+    about: "Dr. Neha Verma is a neurologist specializing in epilepsy and neurodegenerative disorders. She is actively involved in clinical research and patient advocacy."
   },
 ];
 
@@ -52,8 +57,12 @@ function DoctorsList() {
                   className={styles.doctorImage}
                 />
               </div>
-              <h5>{doctor.name}</h5>
-              <p>{doctor.specialty}</p>
+              <h5>
+                <Link href={`/doctors/${doctor.id}`} className={styles.doctorName}>
+                  {doctor.name}
+                </Link>
+              </h5>
+              <p className={styles.doctorSpeciality}>{doctor.specialty}</p>
               <p>{doctor.yearsOfExperience} years of experience</p>
               <p>{doctor.hospital}</p>
             </div>

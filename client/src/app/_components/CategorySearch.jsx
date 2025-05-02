@@ -26,12 +26,12 @@ function CategorySearch() {
         <input
           type="text"
           placeholder="Start your search..."
-          className={`rounded-2 border border-0 ${styles.searchInput}`}
+          className={`rounded-2 border border-2`}
           style={{ width: "20%", padding: "8px" }}
         />
         <button
           type="submit"
-          className={`btn text-white ${styles.searchButton}`}
+          className={`btn text-white`}
           style={{ backgroundColor: "#20b2aa", padding: "8px 16px" }}
         >
           Search

@@ -1,0 +1,168 @@
+.profileContainer {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.profileCard {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.doctorName {
+    font-size: 2.25rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.specialty {
+    border: 2px solid #20b2aa;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 13.5px !important;
+    margin-bottom: 1rem;
+    display: inline-block;
+    background-color: #ffffff;
+}
+
+.infoSection {
+    margin-bottom: 1.5rem;
+}
+
+.infoSection p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.aboutBox {
+    background-color: #20b2ab38;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    width: 23px;
+    height: 23px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+.infoCard {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    height: 100%;
+}
+
+.infoCard h5 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.qualificationsList,
+.scheduleList {
+    padding-left: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.qualificationsList li,
+.scheduleList li {
+    margin-bottom: 0.5rem;
+}
+
+.scheduleList li .icon {
+    margin-right: 0.5rem;
+}
+
+.imageContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.doctorImage {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
+
+.buttonSection {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.appointmentButton {
+    background-color: #20b2aa;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 200px;
+    margin-top: .5rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.appointmentButton:hover {
+    background-color: #00675b;
+    transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .doctorImage {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 1rem;
+    }
+
+    .imageContainer {
+        justify-content: center;
+    }
+
+    .doctorName {
+        font-size: 1.75rem;
+        text-align: center;
+    }
+
+    .specialty {
+        display: block;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .infoSection p,
+    .infoSection .aboutBox {
+        text-align: center;
+        justify-content: center;
+    }
+
+    .infoCard {
+        text-align: center;
+    }
+
+    .infoCard h5 {
+        justify-content: center;
+    }
+
+    .qualificationsList,
+    .scheduleList {
+        list-style-position: inside;
+        padding-left: 0;
+    }
+
+    .buttonSection {
+        justify-content: center;
+    }
+}
