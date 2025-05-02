@@ -1,21 +1,15 @@
-import mysql.connector
-from mysql.connector import Error
+# init_db.py
 
-try:
-    print("Trying to connect...")
-    connection = mysql.connector.connect(
-    host='127.0.0.1',
-    user='root',
-    password='root',
-    connection_timeout=5
-)
+from app import create_app
+from extensions import db
+from models.appointment import Appointment
+# Import your models so SQLAlchemy knows about them
+from models.doctor import Doctor
+from models.patient import Patient
 
-    if connection.is_connected():
-        print("✅ Database connected successfully!")
+# Create the Flask app context
+app = create_app()
 
-except Error as e:
-    print("❌ Error while connecting to database:", e)
-
-finally:
-    if 'connection' in locals() and connection.is_connected():
-        connection.close()
+with app.app_context():
+    db.create_all()
+    print("✅ Database tables created successfully.")
