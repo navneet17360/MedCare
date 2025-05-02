@@ -1,0 +1,153 @@
+.container {
+  display: flex;
+  padding: 40px;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 40px;
+}
+
+.sidebarTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.specialtyList {
+  list-style: none;
+  padding: 0;
+}
+
+.specialtyItem {
+  padding: 10px 15px;
+  font-size: 1rem;
+  color: #555;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.specialtyItem:hover {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.specialtyItem.active {
+  background-color: #20b2aa;
+  color: white;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.doctorList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.doctorCard {
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  width: 250px;
+  text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+}
+
+.doctorCard:hover {
+  background-color: #e0f7fa;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cardContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageContainer {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.doctorImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.doctorCard h5 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 20px;
+  color: #333;
+}
+
+.doctorCard p {
+  color: #555;
+  font-size: 1rem;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+.doctorCard:hover h5,
+.doctorCard:hover p {
+  color: #00796b;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.bookButton {
+  background-color: #20b2aa;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  width: 50%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.bookButton:hover {
+  background-color: #00796b;
+}
+
+.noDoctors {
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+  margin-top: 20px;
+}

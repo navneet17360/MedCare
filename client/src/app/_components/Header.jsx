@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // 👈 import useRouter
 import {
   SignInButton,
   SignedIn,
@@ -10,15 +11,38 @@ import {
   UserButton,
   useAuth,
 } from "@clerk/nextjs";
+import { toast, ToastContainer } from "react-toastify"; // 👈 import toast
 import styles from "../../styles/header.module.css";
+import "react-toastify/dist/ReactToastify.css"; // 👈 import toast styles
 
 function Header() {
-  const { isLoaded } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth(); // 👈 get isSignedIn from useAuth
+  const router = useRouter(); // 👈 get router from useRouter
+
   const Menu = [
     { id: 1, name: "Home", path: "/" },
     { id: 2, name: "Explore", path: "/explore" },
     { id: 3, name: "Contact Us", path: "/contact-us" },
-  ];
+    isSignedIn && { id: 4, name: "Appointments", path: "/appointments" }, // 👈 show Appointments if signed in
+  ].filter(Boolean); // Filter out false values (like when isSignedIn is false)
+
+  const handleExploreClick = (e) => {
+    e.preventDefault();
+
+    if (!isSignedIn) {
+      toast.error("Please log in first to explore!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      router.push("/explore"); // 👈 redirect to explore if user is logged in
+    }
+  };
 
   return (
     <div
@@ -35,7 +59,11 @@ function Header() {
         <ul className="d-none d-md-flex gap-3 list-unstyled">
           {Menu.map((item) => (
             <li className={styles.listItem} key={item.id}>
-              <Link href={item.path} className={styles.linkText}>
+              <Link
+                href={item.path}
+                className={styles.linkText}
+                onClick={item.name === "Explore" ? handleExploreClick : null} // 👈 attach click handler
+              >
                 {item.name}
               </Link>
             </li>
@@ -59,6 +87,7 @@ function Header() {
             Get Started
           </button>
         )}
+        <ToastContainer /> {/* Add ToastContainer here */}
       </div>
     </div>
   );

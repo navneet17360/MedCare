@@ -1,7 +1,13 @@
+"use client";
 import React from "react";
 import styles from "../../styles/categorySearch.module.css";
+import Link from "next/link";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "@clerk/nextjs";
 
 function CategorySearch() {
+  const { isSignedIn } = useAuth();
   const specialties = [
     { name: "Dentist", icon: "/icons/tooth.svg" },
     { name: "Cardiologist", icon: "/icons/heart.svg" },
@@ -12,8 +18,24 @@ function CategorySearch() {
     { name: "Ophthalmologist", icon: "/icons/eye.svg" },
   ];
 
+  const handleSpecialtyClick = (e) => {
+    if (!isSignedIn) {
+      e.preventDefault();
+      toast.error("Please log in first to view doctors!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   return (
     <div className="px-5 my-5 d-flex align-items-center flex-column gap-2">
+      <ToastContainer />
       <h2 className="fw-bold ps-3 display-6 mb-0">
         Search <span style={{ color: "#20b2aa" }}>Doctors</span>
       </h2>
@@ -40,15 +62,22 @@ function CategorySearch() {
 
       <div className={styles.specialtiesContainer}>
         {specialties.map((specialty, index) => (
-          <div key={index} className={styles.specialtyCard}>
-            <img
-              src={specialty.icon}
-              alt={specialty.name}
-              width="40"
-              height="40"
-            />
-            <span className={styles.specialtyName}>{specialty.name}</span>
-          </div>
+          <Link
+            href={`/doctors/specialty/${specialty.name.toLowerCase()}`}
+            key={index}
+            style={{ textDecoration: "none" }}
+            onClick={handleSpecialtyClick}
+          >
+            <div className={styles.specialtyCard}>
+              <img
+                src={specialty.icon}
+                alt={specialty.name}
+                width="40"
+                height="40"
+              />
+              <span className={styles.specialtyName}>{specialty.name}</span>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
