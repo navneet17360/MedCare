@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={outfit.className}>
-          <div className="px-3 px-md-5">
+          <div className="px-3 px-md-0">
             <Header />
             {children}
           </div>

@@ -70,10 +70,9 @@
 .imageContainer {
   width: 160px;
   height: 160px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 20px;
 }
 
 .doctorImage {
@@ -100,7 +99,19 @@
 .doctorCard:hover p {
   color: #00796b;
 }
-/* Add this to your existing doctorsList.module.css */
+
+.doctorSpeciality {
+  border: 2px solid #20b2aa;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 13.5px !important;
+}
+
+.doctorName {
+  text-decoration: none;
+  color: black;
+}
+
 .swiper {
   padding-bottom: 40px;
 }

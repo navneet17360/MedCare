@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import styles from "../../styles/doctorsList.module.css";
+import { useAuth } from "@clerk/nextjs"; // If you need auth functionality
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "@clerk/nextjs";
 
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -64,7 +65,7 @@ const doctors = [
 ];
 
 function DoctorsList() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth(); // If you need auth functionality
   const router = useRouter();
 
   const handleViewAllClick = (e) => {
@@ -83,7 +84,7 @@ function DoctorsList() {
     <div className={styles.doctorsList}>
       <ToastContainer />
       <div className={styles.titleContainer}>
-        <h2 className={styles.title}>Trusted Doctors</h2>
+        <h2 className={styles.title}>Our Doctors</h2>
         <button className={styles.viewAllButton} onClick={handleViewAllClick}>
           View All
         </button>
@@ -112,8 +113,15 @@ function DoctorsList() {
                     className={styles.doctorImage}
                   />
                 </div>
-                <h5>{doctor.name}</h5>
-                <p>{doctor.specialty}</p>
+                <h5>
+                  <Link
+                    href={`/our_doctors/${doctor.id}`}
+                    className={styles.doctorName}
+                  >
+                    {doctor.name}
+                  </Link>
+                </h5>
+                <p className={styles.doctorSpeciality}>{doctor.specialty}</p>
                 <p>{doctor.yearsOfExperience} years of experience</p>
                 <p>{doctor.hospital}</p>
               </div>
