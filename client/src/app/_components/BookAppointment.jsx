@@ -1,4 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import emailjs from "@emailjs/browser";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "../../styles/BookAppointment.module.css";
 
 function BookAppointment() {
@@ -8,6 +14,8 @@ function BookAppointment() {
     date: "",
     time: "",
   });
+
+  const { user } = useUser();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -20,7 +28,37 @@ function BookAppointment() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Appointment booked:", formData);
+
+    const toEmail =
+      user?.primaryEmailAddress?.emailAddress?.trim() || "fallback@example.com";
+
+    const emailData = {
+      to_email: toEmail,
+      patient_name: formData.patientName,
+      appointment_date: formData.date,
+      appointment_time: formData.time,
+    };
+
+    console.log("Email data to send:", emailData);
+
+    emailjs
+      .send(
+        "service_0wt7ljc",         // Replace with your EmailJS Service ID
+        "template_oi5zsvh",        // Replace with your EmailJS Template ID
+        emailData,
+        "dYUrn5Sm0t1bkY2Yk"        // Replace with your EmailJS Public Key
+      )
+      .then(
+        (result) => {
+          console.log("Email sent successfully:", result.text);
+          toast.success("✅ Appointment booked! Confirmation email sent.");
+        },
+        (error) => {
+          console.error("Email sending failed:", error);
+          toast.error("⚠️ Appointment booked, but failed to send email.");
+        }
+      );
+
     toggleModal();
   };
 
@@ -29,6 +67,7 @@ function BookAppointment() {
       <button className={styles.bookButton} onClick={toggleModal}>
         Book Appointment
       </button>
+
       {isOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -93,6 +132,9 @@ function BookAppointment() {
           </div>
         </div>
       )}
+
+      {/* Toast Notification */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

@@ -3,28 +3,37 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // 👈 import useRouter
+import { useRouter } from "next/navigation";
 import {
   SignInButton,
   SignedIn,
   SignedOut,
   UserButton,
   useAuth,
+  useUser, // 👈 Import useUser
 } from "@clerk/nextjs";
-import { toast, ToastContainer } from "react-toastify"; // 👈 import toast
+import { toast, ToastContainer } from "react-toastify";
 import styles from "../../styles/header.module.css";
-import "react-toastify/dist/ReactToastify.css"; // 👈 import toast styles
+import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
-  const { isLoaded, isSignedIn } = useAuth(); // 👈 get isSignedIn from useAuth
-  const router = useRouter(); // 👈 get router from useRouter
+  const { isLoaded, isSignedIn } = useAuth();
+  const { user } = useUser(); // 👈 Get user from useUser
+  const router = useRouter();
+
+  // Log the user's email when the user is loaded and signed in
+  React.useEffect(() => {
+    if (isLoaded && isSignedIn && user) {
+      console.log("Authenticated user email:", user.primaryEmailAddress?.emailAddress);
+    }
+  }, [isLoaded, isSignedIn, user]); // Dependencies for useEffect
 
   const Menu = [
     { id: 1, name: "Home", path: "/" },
     { id: 2, name: "Explore", path: "/explore" },
     { id: 3, name: "Contact Us", path: "/contact-us" },
-    isSignedIn && { id: 4, name: "Appointments", path: "/appointments" }, // 👈 show Appointments if signed in
-  ].filter(Boolean); // Filter out false values (like when isSignedIn is false)
+    isSignedIn && { id: 4, name: "Appointments", path: "/appointments" },
+  ].filter(Boolean);
 
   const handleExploreClick = (e) => {
     e.preventDefault();
@@ -40,7 +49,7 @@ function Header() {
         progress: undefined,
       });
     } else {
-      router.push("/explore"); // 👈 redirect to explore if user is logged in
+      router.push("/explore");
     }
   };
 
@@ -62,7 +71,7 @@ function Header() {
               <Link
                 href={item.path}
                 className={styles.linkText}
-                onClick={item.name === "Explore" ? handleExploreClick : null} // 👈 attach click handler
+                onClick={item.name === "Explore" ? handleExploreClick : null}
               >
                 {item.name}
               </Link>
@@ -87,7 +96,7 @@ function Header() {
             Get Started
           </button>
         )}
-        <ToastContainer /> {/* Add ToastContainer here */}
+        <ToastContainer />
       </div>
     </div>
   );
