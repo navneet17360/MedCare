@@ -2,13 +2,11 @@ import random
 from datetime import datetime, timedelta
 
 from app import create_app, db
-from faker import Faker
 from models.appointment import Appointment
 from models.doctor import Doctor
-from models.patient import Patient
 
-fake = Faker()
 doctors_data = [
+    #Neurology
     {
         "name": "Tarun Mathur",
         "specialty": "Neurology",
@@ -129,12 +127,169 @@ doctors_data = [
         "availability": "Mon-Sat 11:30 AM–1:30 PM, 5:00 PM–8:00 PM",
         "image_url":"https://content.jdmagicbox.com/comp/udaipur-rajasthan/v2/9999px294.x294.160921214540.g5v2/catalogue/dr-vishal-jogi-udaipur-city-udaipur-rajasthan-neurologists-3yem611.jpg"
     },
+    #Dental
+    {
+        "name": "Dr. Ritu Garg",
+        "specialty": "Dental",
+        "years_experience": 16,
+        "hospital_name": "Dr. Ritu’s Orthodontic & Dental Care",
+        "address": "Dr. Ritu’s Orthodontic & Dental Care, Udaipur Shastri Circle",
+        "description": "Dr. Ritu Garg has an experience of around 16 years in the field of dentistry. She is a BDS and MDS graduate and has worked at multiple institutions including Pacific and Darshan Dental Colleges. She is currently the Director at her own clinic.",
+        "contact": "+1139588791",
+        "charges": 200,
+        "availability": "Mon-Sat 9:00 AM–2:00 PM, 4:00 PM–8:00 PM",
+        "image_url": "Not available"
+    },
+    {
+        "name": "Dr. Ashish Mathur",
+        "specialty": "Dental",
+        "years_experience": 8,
+        "hospital_name": "Noble Dental Clinic",
+        "address": "Noble Dental Clinic, V M Complex, Sector-6, Udaipur H Magri",
+        "description": "Experienced dentist with 8 years in the field. Offers services like gum disease treatment and dental restoration. Member of IDA and Medical Practitioner Society.",
+        "contact": "+918039659364",
+        "charges": 100,
+        "availability": "Mon-Sat 9:00 AM–1:00 PM, 4:00 PM–8:00 PM",
+        "image_url": "Not available"
+    },
+    {
+        "name": "Dr. Nikhil Verma",
+        "specialty": "Dental",
+        "years_experience": 16,
+        "hospital_name": "Smilez Dental Care & Implant Center",
+        "address": "Smilez Dental Care & Implant Center, 3rd floor, R Kay Mall, Panchvati, Udaipur City",
+        "description": "Prosthodontist with 16 years experience. Provides services like metal brace, bridges, and dental implants. Member of IDA and Indian Prosthodontic Society.",
+        "contact": "+1139589019",
+        "charges": 200,
+        "availability": "Mon-Sat 9:30 AM–8:30 PM",
+        "image_url": "Not available"
+    },
+    {
+        "name": "Dr. Jitendra Lohar",
+        "specialty": "Dental",
+        "years_experience": 7,
+        "hospital_name": "Bhagyoday Dental Care",
+        "address": "Bhagyoday Dental Care, sector 14, Gokul Tower, Near CA circle",
+        "description": "Dentist with 7 years experience. Specializes in teeth whitening, gum disease treatment, and bleeding gum treatment.",
+        "contact": "+911139587886",
+        "charges": 150,
+        "availability": "Mon-Sat 4:00 PM–8:00 PM, Sun 11:00 AM–2:00 PM",
+        "image_url": "Not available"
+    },
+    {
+        "name": "Dr. Nitin Dungarwal",
+        "specialty": "Dental",
+        "years_experience": 7,
+        "hospital_name": "Apple Dental Clinic",
+        "address": "Apple Dental Clinic, opposite HDFC Bank, ChetaK Circle, Madhuban, Udaipur",
+        "description": "Offers orthodontic treatment, dental fillings, and dental implant fixing. Director at Apple Dental Clinic since 2011.",
+        "contact": "+918039659364",
+        "charges": 100,
+        "availability": "Mon-Sat 10:00 AM–2:00 PM, 4:00 PM–8:00 PM",
+        "image_url": "Not available"
+    },
+    {
+        "name": "Dr. Rajan",
+        "specialty": "Dental",
+        "years_experience": 23,
+        "hospital_name": "Dr. Rajan’s Dental Clinic",
+        "address": "Dr. Rajan’s Dental Clinic, #25, Tanishq towers, 2nd floor, Residency road, Near GPH American Hospital",
+        "description": "Experienced dentist with 23 years in the field. Former professor and head at various dental colleges. Specializes in oral medicine.",
+        "contact": "+911139588675",
+        "charges": 200,
+        "availability": "Mon-Sat 5:00 PM–9:00 PM",
+        "image_url": "Not available"
+    },
+    #dermatology
+    {
+    "name": "Dr. Asit Mittal",
+    "specialty": "dermatology",
+    "years_experience": 5,
+    "hospital_name": "Private Practice",
+    "address": "House No 62, Road No 2, Ashok Nagar, Udaipur, Rajasthan 313001",
+    "description": "One of the most renowned dermatologists in Udaipur with MBBS and MD (Skin and V.D), available mostly from 4:30 PM to 9:00 PM except Sundays.",
+    "contact": "0294 252 1520",
+    "charges": 250,
+    "availability": "Mon-Sat 4:30 PM–9:00 PM",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. Prashant Agrawal",
+    "specialty": "dermatology",
+    "years_experience": 6,
+    "hospital_name": "Dermadent Clinic",
+    "address": "60, 100 feet Road, Shobhagpura, Udaipur, Rajasthan – 313011",
+    "description": "Experienced dermatologist offering a wide range of skin treatments including acne, wrinkles, hair loss, and laser procedures.",
+    "contact": "093520 82112",
+    "charges": 500,
+    "availability": "Mon-Sat 10:00 AM–1:00 PM, 4:00 PM–7:00 PM",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. A K Khare",
+    "specialty": "dermatology",
+    "years_experience": 15,
+    "hospital_name": "Private Practice",
+    "address": "4-5, Hiran Magri, Mayur One Colony, Near Menaria Guest House, Udaipur, Rajasthan – 313002",
+    "description": "MBBS, MD, DNB, PDCC. Known for patient-centric care and clinical excellence.",
+    "contact": "0294 246 0022",
+    "charges": 250,
+    "availability": "Mon-Sat 5:00 PM–7:00 PM",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. Sudhir Tomar",
+    "specialty": "dermatology",
+    "years_experience": 9,
+    "hospital_name": "Private Clinic",
+    "address": "300 Block B, Hiran Magri, Sector 14, Udaipur City-313001",
+    "description": "Celebrated dermatologist with extensive practice hours and high patient satisfaction.",
+    "contact": "+91 91524 43093",
+    "charges": 450,
+    "availability": "Mon-Sat 9:00 AM–1:00 PM, 5:00 PM–8:00 PM",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. Sharad Mehta",
+    "specialty": "dermatology",
+    "years_experience": 6,
+    "hospital_name": "Shrinath Plaza Clinic",
+    "address": "21 Shrinath Plaza, M B Hospital Road, Madhuban, Udaipur-Rajasthan – 313001",
+    "description": "Experienced MBBS and MD(DVL) dermatologist known for his depth of knowledge and quality care.",
+    "contact": "088756 63606",
+    "charges": 400,
+    "availability": "Mon-Sat",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. Manisha Balai",
+    "specialty": "dermatology",
+    "years_experience": 5,
+    "hospital_name": "Crystal Plaza Clinic",
+    "address": "Sector 9, Crystal Plaza, Hiran Magri, Udaipur-Rajasthan",
+    "description": "Offers treatments including hair loss, acne, botox, anti-aging. Dedicated to excellent patient care.",
+    "contact": "08503959788",
+    "charges": 200,
+    "availability": "Mon-Sat 5:00 PM–8:00 PM",
+    "image_url": "not available"
+  },
+  {
+    "name": "Dr. Ahmed Khalil",
+    "specialty": "dermatology",
+    "years_experience": 12,
+    "hospital_name": "Private Clinic",
+    "address": "2-Kha-24, Shanti Nagar, Sector 5, Hiran Magri, Udaipur-Rajasthan – 313002",
+    "description": "Renowned dermatologist offering expert dermatology care in a clean, stress-free environment.",
+    "contact": "+91 9828714620",
+    "charges": 300,
+    "availability": "Mon-Sat",
+    "image_url": "not available"
+  }
 ]
 app = create_app()
 
 with app.app_context():
     Appointment.query.delete()
-    Patient.query.delete()
     Doctor.query.delete()
     db.session.commit()
 
@@ -143,30 +298,5 @@ with app.app_context():
         doctor = Doctor(**doc_data)
         db.session.add(doctor)
         doctors.append(doctor)
-
-    patients = []
-    for _ in range(10):
-        patient = Patient(
-            name=fake.name(),
-            email=fake.unique.email(),
-            phone=fake.phone_number(),
-            age=random.randint(1, 90)
-        )
-        patients.append(patient)
-        db.session.add(patient)
-
     db.session.commit()
-
-    for _ in range(15):
-        appointment = Appointment(
-            date=fake.date_between(start_date='-30d', end_date='+30d'),
-            time=(datetime.now() + timedelta(minutes=random.randint(0, 1440))).time(),
-            doctor_id=random.choice(doctors).id,
-            patient_id=random.choice(patients).id,
-            status=random.choice(['pending', 'confirmed', 'cancelled'])
-        )
-        db.session.add(appointment)
-
-    db.session.commit()
-
     print("Dummy data seeded successfully!")

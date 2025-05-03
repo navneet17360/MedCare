@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify, request
+from datetime import datetime
 
 from app import db
+from flask import Blueprint, jsonify, request
 from models.appointment import Appointment
 
 appointment_bp = Blueprint('appointment_bp', __name__)
@@ -11,10 +12,10 @@ def get_appointments():
     return jsonify([
         {
             'id': a.id,
+            'patient_name': a.patient_name,
             'date': a.date.isoformat(),
             'time': a.time.isoformat(),
             'doctor_id': a.doctor_id,
-            'patient_id': a.patient_id,
             'status': a.status
         }
         for a in appointments
@@ -24,25 +25,30 @@ def get_appointments():
 def add_appointment():
     data = request.get_json()
     new_appointment = Appointment(
-        date=data['date'],
-        time=data['time'],
+        patient_name=data['patient_name'],
+        date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
+        time=datetime.strptime(data['time'], '%H:%M').time(),
         doctor_id=data['doctor_id'],
-        patient_id=data['patient_id'],
-        status=data['status']
+        status='Scheduled'  # default status
     )
     db.session.add(new_appointment)
     db.session.commit()
-    return jsonify({'message': 'Appointment added successfully'}), 201
+    return jsonify({'message': 'Appointment booked successfully'}), 201
 
 @appointment_bp.route('/<int:id>', methods=['PUT'])
 def update_appointment(id):
     appointment = Appointment.query.get_or_404(id)
     data = request.get_json()
-    appointment.date = data.get('date', appointment.date)
-    appointment.time = data.get('time', appointment.time)
-    appointment.doctor_id = data.get('doctor_id', appointment.doctor_id)
-    appointment.patient_id = data.get('patient_id', appointment.patient_id)
-    appointment.status = data.get('status', appointment.status)
+    if 'patient_name' in data:
+        appointment.patient_name = data['patient_name']
+    if 'date' in data:
+        appointment.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    if 'time' in data:
+        appointment.time = datetime.strptime(data['time'], '%H:%M').time()
+    if 'doctor_id' in data:
+        appointment.doctor_id = data['doctor_id']
+    if 'status' in data:
+        appointment.status = data['status']
     db.session.commit()
     return jsonify({'message': 'Appointment updated successfully'})
 

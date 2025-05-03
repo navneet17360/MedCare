@@ -1,7 +1,6 @@
-from flask import Flask
-
 from config import Config
 from extensions import db  # <<< Import from extensions
+from flask import Flask
 
 
 def create_app():
@@ -12,12 +11,12 @@ def create_app():
 
     # Import and register blueprints
     from routes.appointment_routes import appointment_bp
+    from routes.contact_routes import contact_bp
     from routes.doctor_routes import doctor_bp
-    from routes.patient_routes import patient_bp
 
     app.register_blueprint(doctor_bp, url_prefix='/api/doctors')
-    app.register_blueprint(patient_bp, url_prefix='/api/patients')
     app.register_blueprint(appointment_bp, url_prefix='/api/appointments')
+    app.register_blueprint(contact_bp, url_prefix='/api/contact-us')
 
     @app.route('/')
     def index():
