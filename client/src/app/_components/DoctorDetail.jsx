@@ -101,23 +101,7 @@ const DoctorDetail = () => {
                     </p>
                     <p className="card-text">
                       <img
-                        src="/icons/location.svg"
-                        alt="Address Icon"
-                        className={styles.icon}
-                      />
-                      {doctor.address}
-                    </p>
-                    <p className="card-text">
-                      <img
-                        src="/icons/phone.svg"
-                        alt="Contact Icon"
-                        className={styles.icon}
-                      />
-                      {doctor.contact}
-                    </p>
-                    <p className="card-text">
-                      <img
-                        src="/icons/money.svg"
+                        src="/icons/fees.svg"
                         alt="Charges Icon"
                         className={styles.icon}
                       />
@@ -140,6 +124,32 @@ const DoctorDetail = () => {
                         </h5>
                         <ul className={styles.scheduleList}>
                           <li>{doctor.availability}</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className={styles.infoCard}>
+                        <h5>
+                          <img
+                            src="/icons/address.svg"
+                            alt="Schedule Icon"
+                            className={styles.icon}
+                          />
+                          Address
+                        </h5>
+                        <ul className={styles.scheduleList}>
+                          <li>{doctor.address}</li>
+                        </ul>
+                        <h5>
+                          <img
+                            src="/icons/contact.svg"
+                            alt="Schedule Icon"
+                            className={styles.icon}
+                          />
+                          Contact
+                        </h5>
+                        <ul className={styles.scheduleList}>
+                          <li>{doctor.contact}</li>
                         </ul>
                       </div>
                     </div>

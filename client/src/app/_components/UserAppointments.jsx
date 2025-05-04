@@ -52,19 +52,21 @@ function UserAppointments() {
       <div className={styles.cardContainer}>
         {appointmentsList.map((appointment) => (
           <div key={appointment.id} className={styles.appointmentCard}>
+            <div className={styles.imageContainer}>
+              <img
+                src={`/${appointment.image}`}
+                alt={appointment.doctorName}
+                className={styles.doctorImage}
+              />
+            </div>
             <div className={styles.cardContent}>
-              <div className={styles.imageContainer}>
-                <img
-                  src={`/${appointment.image}`}
-                  alt={appointment.doctorName}
-                  className={styles.doctorImage}
-                />
-              </div>
               <h5>{appointment.doctorName}</h5>
-              <p>{appointment.specialty}</p>
-              <p>{appointment.hospital}</p>
-              <p>{appointment.phone}</p>
-              <p>Status: {appointment.status}</p>
+              <div className={styles.infoContainer}>
+                <p>{appointment.specialty}</p>
+                <p>{appointment.hospital}</p>
+                <p>{appointment.phone}</p>
+                <p>Status: {appointment.status}</p>
+              </div>
             </div>
             {appointment.status === "Booked" && (
               <div className={styles.buttonContainer}>

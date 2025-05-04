@@ -110,21 +110,21 @@ function Explore() {
               }}
             >
               {groupedDoctors[specialty].map((doctor) => (
-                <SwiperSlide key={doctor.id}>
-                  <div className={styles.doctorCard}>
+                <SwiperSlide key={doctor.id} className="mb-4 ms-1">
+                  <div className={`${styles.doctorCard} docCard`}>
                     <div className={styles.cardContent}>
                       <div className={styles.imageContainer}>
                         <img
                           src={
                             doctor.image_url &&
-                            doctor.image_url !== "Not-available"
+                              doctor.image_url !== "Not-available"
                               ? doctor.image_url
-                              : "/doctors.jpg"
+                              : "/dummy.png"
                           }
                           alt={doctor.name}
                           className={styles.doctorImage}
                           onError={(e) => {
-                            e.target.src = "/doctors.jpg"; // Fallback image
+                            e.target.src = "/dummy.png"; // Fallback image
                           }}
                         />
                       </div>
@@ -140,17 +140,7 @@ function Explore() {
                         marginTop: "16px",
                       }}
                     >
-                      <button
-                        style={{
-                          backgroundColor: "#20b2aa",
-                          color: "white",
-                          border: "none",
-                          padding: "10px 20px",
-                          borderRadius: "50px",
-                          cursor: "pointer",
-                          width: "50%",
-                        }}
-                      >
+                      <button className={styles.bookNowButton}       >
                         Book now
                       </button>
                     </div>
@@ -161,6 +151,12 @@ function Explore() {
           </div>
         ))
       )}
+      <style jsx>{`
+  .docCard {
+    height: 400px !important; /* Use !important to ensure it overrides other styles */
+  }
+`}</style>
+
     </div>
   );
 }

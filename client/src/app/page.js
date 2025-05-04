@@ -12,7 +12,9 @@ export default function Home() {
       {/* Search Bar + Categories */}
       <CategorySearch />
       {/* Doctors List */}
-      <DoctorsList />
+      <section id="doctors-section">
+        <DoctorsList />
+      </section>
     </div>
   );
 }

@@ -1,8 +1,15 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
 
 function Hero() {
+  const handleExploreClick = () => {
+    const doctorsSection = document.getElementById("doctors-section");
+    if (doctorsSection) {
+      doctorsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section>
       <div className="container py-5">
@@ -19,7 +26,12 @@ function Hero() {
                 Simplifying your healthcare experience, one step at a time.
               </p>
 
-              <button className="exploreButton btn fw-bold rounded-3 py-2 mt-3">Explore Now</button>
+              <button
+                className="exploreButton btn fw-bold rounded-3 py-2 mt-3"
+                onClick={handleExploreClick}
+              >
+                Explore Now
+              </button>
             </div>
           </div>
 
@@ -40,13 +52,18 @@ function Hero() {
           background-color: #20b2aa;
           border: none;
           transition: background-color 0.3s ease, transform 0.3s ease;
-          color:white;
+          color: white;
         }
 
         .exploreButton:hover {
           background-color: #00675b;
           transform: scale(1.05);
         }
+
+        .exploreButton:active,
+        .exploreButton:focus {
+          color: white !important; /* Force white text */
+          outline: none; /* Remove default focus outline */
       `}</style>
     </section>
   );

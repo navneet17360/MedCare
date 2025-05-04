@@ -4,21 +4,20 @@
   }
   
   .bookButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 5px;
-    border: none;
-    background-color: #007bff;
+    background-color: #20b2aa;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    width: 100%;
-    max-width: 200px;
+    transition: all 0.3s ease-in-out; /* ✅ Updated to include transform */
+    display: inline-block; /* ✅ Ensures transform works */
   }
   
   .bookButton:hover {
-    background-color: #005f99;
+    background-color: #00675b;
+    transform: scale(1.05);
   }
   
   .modalOverlay {

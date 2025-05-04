@@ -34,7 +34,7 @@ function CategorySearch() {
   };
 
   return (
-    <div className="px-5 my-5 d-flex align-items-center flex-column gap-2">
+    <div className="px-5 mb-5 mt-2 d-flex align-items-center flex-column gap-2">
       <ToastContainer />
       <h2 className="fw-bold ps-3 display-6 mb-0">
         Search <span style={{ color: "#20b2aa" }}>Doctors</span>
@@ -60,6 +60,8 @@ function CategorySearch() {
         </button>
       </div>
 
+      <h2 className="mt-5 fw-bold display-6">Find <span style={{ color: "#20b2aa" }}>Experts</span> by Field</h2>
+      <p className="fs-4 text-muted">From dermatology to cardiology, explore trusted options.</p>
       <div className={styles.specialtiesContainer}>
         {specialties.map((specialty, index) => (
           <Link

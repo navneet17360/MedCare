@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import Image from "next/image";
 
 function ContactUs() {
   const { isSignedIn, user } = useUser();
@@ -147,14 +148,21 @@ function ContactUs() {
   }
 
   return (
-    <div className={styles.backgroundWrapper}>
+    <>
+      <div className={styles.backgroundWrapper}>
+        {/* Add alt and src to avoid error if Image is from 'next/image' */}
+        <Image src="/contact-us.png" alt="Contact Us Background"
+          fill
+          className="img-fluid"
+          objectFit="cover" />
+        <h2 className={styles.title}>Contact Us</h2>
+      </div>
+      <p className={styles.subtitle}>
+        We’re here to help! Fill out the form below, and we’ll get back to you
+        soon.
+      </p>
       <div className={styles.container}>
         <ToastContainer />
-        <h2 className={styles.title}>Contact Us</h2>
-        <p className={styles.subtitle}>
-          We’re here to help! Fill out the form below, and we’ll get back to you
-          soon.
-        </p>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
@@ -166,9 +174,8 @@ function ContactUs() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`${styles.input} ${
-                errors.name ? styles.errorInput : ""
-              }`}
+              className={`${styles.input} ${errors.name ? styles.errorInput : ""
+                }`}
               placeholder="Enter your name"
             />
             {errors.name && <p className={styles.error}>{errors.name}</p>}
@@ -183,9 +190,8 @@ function ContactUs() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`${styles.input} ${
-                errors.email ? styles.errorInput : ""
-              }`}
+              className={`${styles.input} ${errors.email ? styles.errorInput : ""
+                }`}
               placeholder="Enter your email"
             />
             {errors.email && <p className={styles.error}>{errors.email}</p>}
@@ -200,9 +206,8 @@ function ContactUs() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`${styles.input} ${
-                errors.phone ? styles.errorInput : ""
-              }`}
+              className={`${styles.input} ${errors.phone ? styles.errorInput : ""
+                }`}
               placeholder="Enter your phone number"
             />
             {errors.phone && <p className={styles.error}>{errors.phone}</p>}
@@ -216,9 +221,8 @@ function ContactUs() {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className={`${styles.textarea} ${
-                errors.description ? styles.errorInput : ""
-              }`}
+              className={`${styles.textarea} ${errors.description ? styles.errorInput : ""
+                }`}
               placeholder="Describe your query or issue"
               rows="5"
             />
@@ -231,7 +235,7 @@ function ContactUs() {
           </button>
         </form>
       </div>
-    </div>
+    </>
   );
 }
 
