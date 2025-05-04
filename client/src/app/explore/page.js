@@ -14,6 +14,12 @@ function Explore() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Function to capitalize the first letter of a string
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   // Fetch doctors from API using axios
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -95,7 +101,9 @@ function Explore() {
         Object.keys(groupedDoctors).map((specialty) => (
           <div key={specialty} className={styles.specialtySection}>
             <div className={styles.titleContainer}>
-              <h2 className={styles.title}>{specialty}</h2>
+              <h2 className={styles.title}>
+                {capitalizeFirstLetter(specialty)}
+              </h2>
             </div>
             <Swiper
               modules={[Navigation]}
@@ -117,7 +125,7 @@ function Explore() {
                         <img
                           src={
                             doctor.image_url &&
-                              doctor.image_url !== "Not-available"
+                            doctor.image_url !== "Not-available"
                               ? doctor.image_url
                               : "/dummy.png"
                           }
@@ -129,7 +137,7 @@ function Explore() {
                         />
                       </div>
                       <h5>{doctor.name}</h5>
-                      <p>{doctor.specialty}</p>
+                      <p>{capitalizeFirstLetter(doctor.specialty)}</p>
                       <p>{doctor.years_experience} years of experience</p>
                       <p>{doctor.hospital_name}</p>
                     </div>
@@ -140,9 +148,7 @@ function Explore() {
                         marginTop: "16px",
                       }}
                     >
-                      <button className={styles.bookNowButton}       >
-                        Book now
-                      </button>
+                      <button className={styles.bookNowButton}>Book now</button>
                     </div>
                   </div>
                 </SwiperSlide>
@@ -151,12 +157,6 @@ function Explore() {
           </div>
         ))
       )}
-      <style jsx>{`
-  .docCard {
-    height: 400px !important; /* Use !important to ensure it overrides other styles */
-  }
-`}</style>
-
     </div>
   );
 }

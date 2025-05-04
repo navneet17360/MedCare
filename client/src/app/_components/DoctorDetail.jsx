@@ -66,12 +66,12 @@ const DoctorDetail = () => {
                       src={
                         doctor.image_url && doctor.image_url !== "Not-available"
                           ? doctor.image_url
-                          : "/doctors.jpg"
+                          : "/dummyDoc.jpg"
                       }
                       alt={doctor.name}
                       className={`img-fluid rounded-3 ${styles.doctorImage}`}
                       onError={(e) => {
-                        e.target.src = "/doctors.jpg"; // Fallback image
+                        e.target.src = "/dummyDoc.jpg"; // Fallback image
                       }}
                     />
                   </div>

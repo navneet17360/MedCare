@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import emailjs from "@emailjs/browser";
@@ -36,6 +35,14 @@ function BookAppointment({ doctorId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      toast.error("Please log in first to book an appointment!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     const toEmail =
       user?.primaryEmailAddress?.emailAddress?.trim() || "fallback@example.com";
     const emailData = {
@@ -71,13 +78,15 @@ function BookAppointment({ doctorId }) {
           (result) => {
             console.log("Email sent successfully:", result.text);
             toast.success(
-              `✅ Appointment booked! Appointment ID: ${response.data.appointment_id}. Confirmation email sent.`
+              `✅ Appointment booked! Appointment ID: ${response.data.appointment_id}. Confirmation email sent.`,
+              { position: "top-right", autoClose: 3000 }
             );
           },
           (error) => {
             console.error("Email sending failed:", error);
             toast.warn(
-              `✅ Appointment booked (ID: ${response.data.appointment_id}), but failed to send email.`
+              `✅ Appointment booked (ID: ${response.data.appointment_id}), but failed to send email.`,
+              { position: "top-right", autoClose: 3000 }
             );
           }
         );
@@ -99,7 +108,7 @@ function BookAppointment({ doctorId }) {
       } else {
         errorMessage += error.message;
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage, { position: "top-right", autoClose: 5000 });
       console.error("Booking error:", error, error.response, error.request);
     }
   };
@@ -167,7 +176,7 @@ function BookAppointment({ doctorId }) {
                     onChange={handleInputChange}
                     className={styles.formInput}
                     required
-                    disabled={!!doctorId} // Disable input if doctorId is provided
+                    disabled={!!doctorId}
                   />
                 </div>
                 <div className={styles.modalFooter}>

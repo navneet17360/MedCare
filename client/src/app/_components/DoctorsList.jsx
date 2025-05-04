@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import axios from "axios";
 import styles from "../../styles/doctorsList.module.css";
 import { useAuth } from "@clerk/nextjs";
@@ -20,6 +19,12 @@ function DoctorsList() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Function to capitalize the first letter of a string
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   // Fetch doctors from API using axios
   useEffect(() => {
@@ -45,6 +50,52 @@ function DoctorsList() {
 
     fetchDoctors();
   }, []);
+
+  // Function to select 6 doctors: 2 Dental, 2 Neurology, 2 Dermatology, sorted by experience
+  const getSelectedDoctors = (doctorsList) => {
+    // Sort by years_experience in descending order
+    const sortByExperience = (a, b) => b.years_experience - a.years_experience;
+
+    // Filter doctors by specialty
+    const dentalDoctors = doctorsList
+      .filter((doctor) => doctor.specialty.toLowerCase() === "dental")
+      .sort(sortByExperience);
+    const neurologyDoctors = doctorsList
+      .filter((doctor) => doctor.specialty.toLowerCase() === "neurology")
+      .sort(sortByExperience);
+    const dermatologyDoctors = doctorsList
+      .filter((doctor) => doctor.specialty.toLowerCase() === "dermatology")
+      .sort(sortByExperience);
+
+    const selected = [];
+
+    // Add up to 2 Dental doctors (most experienced)
+    selected.push(...dentalDoctors.slice(0, 2));
+
+    // Add up to 2 Neurology doctors (most experienced)
+    selected.push(...neurologyDoctors.slice(0, 2));
+
+    // Add up to 2 Dermatology doctors (most experienced)
+    selected.push(...dermatologyDoctors.slice(0, 2));
+
+    // Ensure we return exactly 6 doctors (or fewer if not enough data)
+    return selected.slice(0, 6);
+  };
+
+  // Get the selected doctors
+  const displayDoctors = getSelectedDoctors(doctors);
+
+  // Handle click on doctor name
+  const handleDoctorClick = (doctorId) => {
+    if (!isSignedIn) {
+      toast.error("Please log in to view doctor details!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } else {
+      router.push(`/our_doctors/${doctorId}`);
+    }
+  };
 
   const handleViewAllClick = (e) => {
     e.preventDefault();
@@ -80,7 +131,6 @@ function DoctorsList() {
             1280: { slidesPerView: 4 },
           }}
         >
-          {/* Render 3 skeleton cards */}
           {[...Array(3)].map((_, index) => (
             <SwiperSlide key={index}>
               <div className={styles.skeletonCard}>
@@ -123,14 +173,14 @@ function DoctorsList() {
           1280: { slidesPerView: 4 },
         }}
       >
-        {doctors.length === 0 ? (
+        {displayDoctors.length === 0 ? (
           <SwiperSlide>
             <div className={styles.doctorCard}>
               <p>No doctors found.</p>
             </div>
           </SwiperSlide>
         ) : (
-          doctors.map((doctor) => (
+          displayDoctors.map((doctor) => (
             <SwiperSlide key={doctor.id} className="mb-4">
               <div className={styles.doctorCard}>
                 <div className={styles.cardContent}>
@@ -149,14 +199,17 @@ function DoctorsList() {
                     />
                   </div>
                   <h5>
-                    <Link
-                      href={`/our_doctors/${doctor.id}`}
+                    <span
+                      onClick={() => handleDoctorClick(doctor.id)}
                       className={styles.doctorName}
+                      style={{ cursor: "pointer" }}
                     >
                       {doctor.name}
-                    </Link>
+                    </span>
                   </h5>
-                  <p className={styles.doctorSpeciality}>{doctor.specialty}</p>
+                  <p className={styles.doctorSpeciality}>
+                    {capitalizeFirstLetter(doctor.specialty)}
+                  </p>
                   <p>{doctor.years_experience} years of experience</p>
                   <p>{doctor.hospital_name}</p>
                 </div>
