@@ -166,21 +166,7 @@ function DoctorsList() {
                     justifyContent: "center",
                     marginTop: "16px",
                   }}
-                >
-                  <button
-                    style={{
-                      backgroundColor: "#20b2aa",
-                      color: "white",
-                      border: "none",
-                      padding: "10px 20px",
-                      borderRadius: "50px",
-                      cursor: "pointer",
-                      width: "50%",
-                    }}
-                  >
-                    Book now
-                  </button>
-                </div>
+                ></div>
               </div>
             </SwiperSlide>
           ))

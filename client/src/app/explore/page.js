@@ -1,88 +1,166 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "../../styles/doctorsList.module.css";
-
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. Ramesh Kumar",
-    specialty: "Cardiologist",
-    image: "doctors/doc1.avif",
-    yearsOfExperience: 15,
-    hospital: "AIIMS, New Delhi",
-  },
-  {
-    id: 2,
-    name: "Dr. Aarya Sharma",
-    specialty: "Pediatrician",
-    image: "doctors/doc2.avif",
-    yearsOfExperience: 10,
-    hospital: "Fortis Healthcare, Mumbai",
-  },
-  {
-    id: 3,
-    name: "Dr. Sunil Gupta",
-    specialty: "Orthopedic Surgeon",
-    image: "doctors/doc3.avif",
-    yearsOfExperience: 20,
-    hospital: "Max Hospital, Delhi",
-  },
-  {
-    id: 4,
-    name: "Dr. Neha Verma",
-    specialty: "Neurologist",
-    image: "doctors/doc4.avif",
-    yearsOfExperience: 12,
-    hospital: "NIMHANS, Bangalore",
-  },
-];
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Explore() {
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch doctors from API using axios
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        console.log("Fetching doctors from API...");
+        const response = await axios.get("http://127.0.0.1:5000/api/doctors/", {
+          timeout: 5000, // 5-second timeout
+        });
+        console.log("API response:", response.data);
+        setDoctors(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching doctors:", err);
+        setError(err.message);
+        setLoading(false);
+        toast.error("Failed to load doctors. Please try again later.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  // Group doctors by specialty
+  const groupBySpecialty = (doctors) => {
+    return doctors.reduce((acc, doctor) => {
+      const specialty = doctor.specialty || "Other";
+      if (!acc[specialty]) {
+        acc[specialty] = [];
+      }
+      acc[specialty].push(doctor);
+      return acc;
+    }, {});
+  };
+
+  const groupedDoctors = groupBySpecialty(doctors);
+
+  if (loading) {
+    return (
+      <div className={styles.doctorsList}>
+        <ToastContainer />
+        <div className={styles.titleContainer}>
+          <h2 className={styles.title}>Loading Doctors...</h2>
+        </div>
+        <div className={styles.cardContainer}>
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className={styles.skeletonCard}>
+              <div className={styles.skeletonImage}></div>
+              <div className={styles.skeletonText}></div>
+              <div className={styles.skeletonTextShort}></div>
+              <div className={styles.skeletonText}></div>
+              <div className={styles.skeletonButton}></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.doctorsList}>
+        <ToastContainer />
+        <div>Error: {error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.doctorsList}>
-      <div className={styles.titleContainer}>
-        <h2 className={styles.title}>Trusted Doctors</h2>
-      </div>
-      <div className={styles.cardContainer}>
-        {doctors.map((doctor) => (
-          <div key={doctor.id} className={styles.doctorCard}>
-            <div className={styles.cardContent}>
-              <div className={styles.imageContainer}>
-                <img
-                  src={`/${doctor.image}`}
-                  alt={doctor.name}
-                  className={styles.doctorImage}
-                />
-              </div>
-              <h5>{doctor.name}</h5>
-              <p>{doctor.specialty}</p>
-              <p>{doctor.yearsOfExperience} years of experience</p>
-              <p>{doctor.hospital}</p>
+      <ToastContainer />
+      {Object.keys(groupedDoctors).length === 0 ? (
+        <div className={styles.titleContainer}>
+          <h2 className={styles.title}>No Doctors Available</h2>
+        </div>
+      ) : (
+        Object.keys(groupedDoctors).map((specialty) => (
+          <div key={specialty} className={styles.specialtySection}>
+            <div className={styles.titleContainer}>
+              <h2 className={styles.title}>{specialty}</h2>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "16px",
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={30}
+              slidesPerView={3}
+              navigation
+              breakpoints={{
+                320: { slidesPerView: 1 },
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 },
               }}
             >
-              <button
-                style={{
-                  backgroundColor: "#20b2aa",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 20px",
-                  borderRadius: "50px",
-                  cursor: "pointer",
-                  width: "50%",
-                }}
-              >
-                Book now
-              </button>
-            </div>
+              {groupedDoctors[specialty].map((doctor) => (
+                <SwiperSlide key={doctor.id}>
+                  <div className={styles.doctorCard}>
+                    <div className={styles.cardContent}>
+                      <div className={styles.imageContainer}>
+                        <img
+                          src={
+                            doctor.image_url &&
+                            doctor.image_url !== "Not-available"
+                              ? doctor.image_url
+                              : "/doctors.jpg"
+                          }
+                          alt={doctor.name}
+                          className={styles.doctorImage}
+                          onError={(e) => {
+                            e.target.src = "/doctors.jpg"; // Fallback image
+                          }}
+                        />
+                      </div>
+                      <h5>{doctor.name}</h5>
+                      <p>{doctor.specialty}</p>
+                      <p>{doctor.years_experience} years of experience</p>
+                      <p>{doctor.hospital_name}</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "16px",
+                      }}
+                    >
+                      <button
+                        style={{
+                          backgroundColor: "#20b2aa",
+                          color: "white",
+                          border: "none",
+                          padding: "10px 20px",
+                          borderRadius: "50px",
+                          cursor: "pointer",
+                          width: "50%",
+                        }}
+                      >
+                        Book now
+                      </button>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 }

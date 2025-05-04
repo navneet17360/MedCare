@@ -2,98 +2,45 @@
 import styles from "../../styles/doctorDetail.module.css";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import BookAppointment from "./BookAppointment";
-
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. Ramesh Kumar",
-    specialty: "Cardiologist",
-    image: "doctors/doc1.avif",
-    yearsOfExperience: 15,
-    hospital: "AIIMS, New Delhi",
-    about:
-      "Dr. Ramesh is a leading cardiologist with expertise in interventional cardiology and heart failure management. He is committed to advancing cardiac care through research and patient-centered treatment.",
-    qualifications: [
-      "MBBS",
-      "MD (Cardiology)",
-      "Fellowship in Interventional Cardiology",
-    ],
-    consultingSchedule: [
-      "Mon-Fri: 9:00 AM - 1:00 PM",
-      "Mon-Fri: 3:00 PM - 7:00 PM",
-    ],
-  },
-  {
-    id: 2,
-    name: "Dr. Aarya Sharma",
-    specialty: "Pediatrician",
-    image: "doctors/doc2.avif",
-    yearsOfExperience: 10,
-    hospital: "Fortis Healthcare, Mumbai",
-    about:
-      "Dr. Aarya specializes in pediatric care, focusing on preventive medicine and developmental disorders. She is known for her compassionate approach and dedication to children's health.",
-    qualifications: [
-      "MBBS",
-      "DCH (Diploma in Child Health)",
-      "DNB (Pediatrics)",
-    ],
-    consultingSchedule: [
-      "Tue-Thu: 10:00 AM - 2:00 PM",
-      "Sat: 9:00 AM - 12:00 PM",
-    ],
-  },
-  {
-    id: 3,
-    name: "Dr. Sunil Gupta",
-    specialty: "Orthopedic Surgeon",
-    image: "doctors/doc3.avif",
-    yearsOfExperience: 20,
-    hospital: "Max Hospital, Delhi",
-    about:
-      "Dr. Sunil is an expert in orthopedic surgery, with a focus on joint replacement and sports injuries. He has performed over 5,000 successful surgeries in his career.",
-    qualifications: [
-      "MBBS",
-      "MS (Orthopedics)",
-      "Fellowship in Joint Replacement",
-    ],
-    consultingSchedule: [
-      "Mon-Wed-Fri: 8:00 AM - 12:00 PM",
-      "Mon-Wed-Fri: 2:00 PM - 6:00 PM",
-    ],
-  },
-  {
-    id: 4,
-    name: "Dr. Neha Verma",
-    specialty: "Neurologist",
-    image: "doctors/doc4.avif",
-    yearsOfExperience: 12,
-    hospital: "NIMHANS, Bangalore",
-    about:
-      "Dr. Neha is a neurologist specializing in epilepsy and neurodegenerative disorders. She is actively involved in clinical research and patient advocacy.",
-    qualifications: ["MBBS", "DM (Neurology)", "PhD in Neuroscience"],
-    consultingSchedule: [
-      "Mon-Fri: 9:00 AM - 1:00 PM",
-      "Thu: 3:00 PM - 7:00 PM",
-    ],
-  },
-];
 
 const DoctorDetail = () => {
   const { id } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const foundDoctor = doctors.find((doc) => doc.id === parseInt(id));
-    setDoctor(foundDoctor);
-    setLoading(false);
+    const fetchDoctor = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://127.0.0.1:5000/api/doctors");
+        const doctors = response.data;
+        const foundDoctor = doctors.find((doc) => doc.id === parseInt(id));
+        setDoctor(foundDoctor);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch doctor details.");
+        setLoading(false);
+      }
+    };
+
+    fetchDoctor();
   }, [id]);
 
   if (loading) {
     return (
       <div className={`container ${styles.profileContainer}`}>
         <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`container ${styles.profileContainer}`}>
+        <p>{error}</p>
       </div>
     );
   }
@@ -116,13 +63,20 @@ const DoctorDetail = () => {
                 <div className="col-md-4 d-flex flex-column align-items-center">
                   <div className={styles.imageContainer}>
                     <img
-                      src={`/${doctor.image}`}
+                      src={
+                        doctor.image_url && doctor.image_url !== "Not-available"
+                          ? doctor.image_url
+                          : "/doctors.jpg"
+                      }
                       alt={doctor.name}
                       className={`img-fluid rounded-3 ${styles.doctorImage}`}
+                      onError={(e) => {
+                        e.target.src = "/doctors.jpg"; // Fallback image
+                      }}
                     />
                   </div>
                   <div className={styles.buttonSection}>
-                    <BookAppointment />
+                    <BookAppointment doctorId={doctor.id} />
                   </div>
                 </div>
                 <div className="col-md-8">
@@ -135,41 +89,45 @@ const DoctorDetail = () => {
                         alt="Hospital Icon"
                         className={styles.icon}
                       />
-                      {doctor.hospital}
+                      {doctor.hospital_name}
                     </p>
                     <p className="card-text">
                       <img
                         src="/icons/experience.svg"
+                        className={styles.icon}
                         alt="Experience Icon"
+                      />
+                      {doctor.years_experience} years of experience
+                    </p>
+                    <p className="card-text">
+                      <img
+                        src="/icons/location.svg"
+                        alt="Address Icon"
                         className={styles.icon}
                       />
-                      {doctor.yearsOfExperience} years of experience
+                      {doctor.address}
+                    </p>
+                    <p className="card-text">
+                      <img
+                        src="/icons/phone.svg"
+                        alt="Contact Icon"
+                        className={styles.icon}
+                      />
+                      {doctor.contact}
+                    </p>
+                    <p className="card-text">
+                      <img
+                        src="/icons/money.svg"
+                        alt="Charges Icon"
+                        className={styles.icon}
+                      />
+                      Consultation Fee: ₹{doctor.charges}
                     </p>
                     <div className={`card-text ${styles.aboutBox}`}>
-                      {doctor.about}
+                      {doctor.description}
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-md-6">
-                      <div className={styles.infoCard}>
-                        <h5>
-                          <img
-                            src="/icons/education.svg"
-                            alt="Qualifications Icon"
-                            className={styles.icon}
-                          />
-                          Qualifications
-                        </h5>
-                        <ul
-                          className={styles.qualificationsList}
-                          style={{ listStyleType: "disc" }}
-                        >
-                          {doctor.qualifications.map((qual, index) => (
-                            <li key={index}>{qual}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
                     <div className="col-md-6">
                       <div className={styles.infoCard}>
                         <h5>
@@ -178,12 +136,10 @@ const DoctorDetail = () => {
                             alt="Schedule Icon"
                             className={styles.icon}
                           />
-                          Consulting Schedule
+                          Availability
                         </h5>
                         <ul className={styles.scheduleList}>
-                          {doctor.consultingSchedule.map((schedule, index) => (
-                            <li key={index}>{schedule}</li>
-                          ))}
+                          <li>{doctor.availability}</li>
                         </ul>
                       </div>
                     </div>

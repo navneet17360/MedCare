@@ -4,6 +4,7 @@ import styles from "../../styles/ContactUs.module.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 function ContactUs() {
   const { isSignedIn, user } = useUser();
@@ -14,6 +15,7 @@ function ContactUs() {
     description: "",
   });
   const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -45,40 +47,104 @@ function ContactUs() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isSignedIn) {
+      toast.error("You must log in first!", {
+        position: "top-right",
+        autoClose: 3000,
+        style: {
+          background: "#fff",
+          color: "#ff4d4f",
+          fontFamily: "inherit",
+          fontSize: "1rem",
+          borderRadius: "8px",
+          border: "1px solid #ff4d4f",
+        },
+      });
+      return;
+    }
     if (validateForm()) {
       try {
-        const response = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        if (response.ok) {
+        console.log("Submitting form data:", formData);
+        const response = await axios.post(
+          "http://127.0.0.1:5000/api/contact-us/",
+          formData
+        );
+        if (response.status >= 200 && response.status < 300) {
           toast.success("Your message has been sent successfully!", {
             position: "top-right",
             autoClose: 3000,
           });
-          setFormData({
-            name: isSignedIn ? user?.fullName || "" : "",
-            email: isSignedIn ? user?.primaryEmailAddress?.emailAddress || "" : "",
-            phone: "",
-            description: "",
-          });
+          setTimeout(() => setIsSubmitted(true), 1000); // Delay to show toast
         } else {
-          throw new Error("Failed to send message");
+          throw new Error(response.data?.error || "Unexpected response status");
         }
       } catch (error) {
-        toast.error("Failed to send message. Please try again!", {
+        console.error("Submission error:", error.response || error.message);
+        const errorMessage =
+          error.response?.data?.error ||
+          error.message ||
+          "Failed to send message. Please try again!";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
+          style: {
+            background: "#fff",
+            color: "#ff4d4f",
+            fontFamily: "inherit",
+            fontSize: "1rem",
+            borderRadius: "8px",
+            border: "1px solid #ff4d4f",
+          },
         });
       }
     } else {
       toast.error("Please fix the errors in the form!", {
         position: "top-right",
         autoClose: 3000,
+        style: {
+          background: "#fff",
+          color: "#ff4d4f",
+          fontFamily: "inherit",
+          fontSize: "1rem",
+          borderRadius: "8px",
+          border: "1px solid #ff4d4f",
+        },
       });
     }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className={styles.backgroundWrapper}>
+        <div
+          className={`${styles.container} flex items-center justify-center min-h-[400px]`}
+        >
+          <div className={`${styles.form} text-center`}>
+            <svg
+              className="w-24 h-24 mx-auto mb-6"
+              fill="none"
+              stroke="#20b2aa"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            <h2 className={`${styles.title} text-3xl`}>
+              Thanks for contacting us!
+            </h2>
+            <p className={`${styles.subtitle} text-lg`}>
+              We’ll get back to you soon.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.backgroundWrapper}>
@@ -100,7 +166,9 @@ function ContactUs() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`${styles.input} ${errors.name ? styles.errorInput : ""}`}
+              className={`${styles.input} ${
+                errors.name ? styles.errorInput : ""
+              }`}
               placeholder="Enter your name"
             />
             {errors.name && <p className={styles.error}>{errors.name}</p>}
@@ -115,7 +183,9 @@ function ContactUs() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`${styles.input} ${errors.email ? styles.errorInput : ""}`}
+              className={`${styles.input} ${
+                errors.email ? styles.errorInput : ""
+              }`}
               placeholder="Enter your email"
             />
             {errors.email && <p className={styles.error}>{errors.email}</p>}
@@ -130,7 +200,9 @@ function ContactUs() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`${styles.input} ${errors.phone ? styles.errorInput : ""}`}
+              className={`${styles.input} ${
+                errors.phone ? styles.errorInput : ""
+              }`}
               placeholder="Enter your phone number"
             />
             {errors.phone && <p className={styles.error}>{errors.phone}</p>}

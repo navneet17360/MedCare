@@ -9,13 +9,13 @@ import { useAuth } from "@clerk/nextjs";
 function CategorySearch() {
   const { isSignedIn } = useAuth();
   const specialties = [
-    { name: "Dentist", icon: "/icons/tooth.svg" },
-    { name: "Cardiologist", icon: "/icons/heart.svg" },
-    { name: "Orthopedic", icon: "/icons/bone.svg" },
-    { name: "Neurologist", icon: "/icons/brain.svg" },
+    { name: "Dental", icon: "/icons/tooth.svg" },
+    { name: "Cardiology", icon: "/icons/heart.svg" },
+    { name: "Dermatology", icon: "/icons/skin.svg" },
+    { name: "Neurology", icon: "/icons/brain.svg" },
     { name: "Otology", icon: "/icons/ear.svg" },
     { name: "Physician", icon: "/icons/physician.svg" },
-    { name: "Ophthalmologist", icon: "/icons/eye.svg" },
+    { name: "Ophthalmology", icon: "/icons/eye.svg" },
   ];
 
   const handleSpecialtyClick = (e) => {

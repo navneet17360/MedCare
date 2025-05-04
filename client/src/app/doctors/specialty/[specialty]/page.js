@@ -1,95 +1,63 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import axios from "axios";
 import styles from "../../../../styles/specialtyDoctorsPage.module.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "@clerk/nextjs";
 
-const doctors = [
-  {
-    id: 1,
-    name: "Dr. Ramesh Kumar",
-    specialty: "Cardiologist",
-    image: "doctors/doc1.avif",
-    yearsOfExperience: 15,
-    hospital: "AIIMS, New Delhi",
-  },
-  {
-    id: 2,
-    name: "Dr. Aarya Sharma",
-    specialty: "Pediatrician",
-    image: "doctors/doc2.avif",
-    yearsOfExperience: 10,
-    hospital: "Fortis Healthcare, Mumbai",
-  },
-  {
-    id: 3,
-    name: "Dr. Sunil Gupta",
-    specialty: "Orthopedic",
-    image: "doctors/doc3.avif",
-    yearsOfExperience: 20,
-    hospital: "Max Hospital, Delhi",
-  },
-  {
-    id: 4,
-    name: "Dr. Neha Verma",
-    specialty: "Neurologist",
-    image: "doctors/doc4.avif",
-    yearsOfExperience: 12,
-    hospital: "NIMHANS, Bangalore",
-  },
-];
-
 const specialties = [
-  "Dentist",
-  "Cardiologist",
+  "Dental",
+  "Cardiology",
   "Orthopedic",
-  "Neurologist",
+  "Neurology",
   "Otology",
   "Physician",
-  "Ophthalmologist",
+  "Ophthalmology",
+  "Dermatology",
 ];
 
 function SpecialtyDoctorsPage() {
   const { isSignedIn } = useAuth();
   const { specialty } = useParams();
   const router = useRouter();
-  const initialSpecialty = specialty || "cardiologist";
+  const initialSpecialty = specialty || "cardiology";
   const [selectedSpecialty, setSelectedSpecialty] = useState(
     initialSpecialty.toLowerCase()
   );
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const filteredDoctors = doctors.filter(
-    (doctor) =>
-      doctor.specialty.toLowerCase() === selectedSpecialty.toLowerCase()
-  );
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:5000/api/doctors/specialty/${selectedSpecialty}`
+        );
+        setDoctors(response.data); // Assuming the response is a list of doctors
+      } catch (err) {
+        setError("Failed to load doctors. Please try again later.");
+        toast.error("Failed to fetch doctor data.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, [selectedSpecialty]);
 
   const handleSpecialtyClick = (specialty) => {
     const specialtyLower = specialty.toLowerCase();
     setSelectedSpecialty(specialtyLower);
     router.push(`/doctors/specialty/${specialtyLower}`);
-  };
-
-  const handleBookClick = (e) => {
-    if (!isSignedIn) {
-      e.preventDefault();
-      toast.error("Please log in first to book an appointment!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      // Replace with actual booking logic or navigation
-      toast.success("Proceeding to book appointment!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    }
   };
 
   // Capitalize the specialty for display
@@ -119,30 +87,31 @@ function SpecialtyDoctorsPage() {
       </div>
       <div className={styles.content}>
         <h2 className={styles.title}>{`${displaySpecialty} Doctors`}</h2>
+        {loading && <p>Loading doctors...</p>}
+        {error && <p className={styles.error}>{error}</p>}
         <div className={styles.doctorList}>
-          {filteredDoctors.length > 0 ? (
-            filteredDoctors.map((doctor) => (
+          {doctors.length > 0 ? (
+            doctors.map((doctor) => (
               <div key={doctor.id} className={styles.doctorCard}>
                 <div className={styles.cardContent}>
                   <div className={styles.imageContainer}>
                     <img
-                      src={`/${doctor.image}`}
+                      src={
+                        doctor.image_url && doctor.image_url !== "Not-available"
+                          ? doctor.image_url
+                          : "/doctors.jpg"
+                      }
                       alt={doctor.name}
                       className={styles.doctorImage}
+                      onError={(e) => {
+                        e.target.src = "/doctors.jpg"; // Fallback image
+                      }}
                     />
                   </div>
                   <h5>{doctor.name}</h5>
                   <p>{doctor.specialty}</p>
-                  <p>{doctor.yearsOfExperience} years of experience</p>
-                  <p>{doctor.hospital}</p>
-                </div>
-                <div className={styles.buttonContainer}>
-                  <button
-                    className={styles.bookButton}
-                    onClick={handleBookClick}
-                  >
-                    Book now
-                  </button>
+                  <p>{doctor.years_experience} years of experience</p>
+                  <p>{doctor.hospital_name}</p>
                 </div>
               </div>
             ))

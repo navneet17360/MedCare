@@ -89,6 +89,7 @@ function Footer() {
         <p className="text-muted mt-4">© 2025 MedCare All Rights Reserved.</p>
       </div>
       <ToastContainer /> {/* Add toast container once */}
+      <div></div>
     </footer>
   );
 }

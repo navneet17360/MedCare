@@ -1,13 +1,25 @@
 from config import Config
-from extensions import db  # <<< Import from extensions
+from extensions import db
 from flask import Flask
-
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    
+    # Configure CORS for the frontend origin
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": ["http://localhost:3000"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
+    
+    db.init_app(app)
 
-    db.init_app(app)  # <<< Important
+    # Disable strict slashes globally to prevent redirects
+    app.url_map.strict_slashes = False
 
     # Import and register blueprints
     from routes.appointment_routes import appointment_bp
@@ -26,4 +38,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
