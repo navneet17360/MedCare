@@ -24,6 +24,28 @@ def get_doctors():
         }
         for doc in doctors
     ])
+@doctor_bp.route('/specialty/<string:specialty>', methods=['GET'])
+def get_doctors_by_specialty(specialty):
+    doctors = Doctor.query.filter(db.func.lower(Doctor.specialty) == specialty.lower()).all()
+    if not doctors:
+        return jsonify({'message': 'No doctors found for this specialty'}), 404
+    return jsonify([
+        {
+            'id': doc.id,
+            'name': doc.name,
+            'specialty': doc.specialty,
+            'years_experience': doc.years_experience,
+            'hospital_name': doc.hospital_name,
+            'address': doc.address,
+            'description': doc.description,
+            'contact': doc.contact,
+            'charges': doc.charges,
+            'availability': doc.availability,
+            'image_url': doc.image_url
+        }
+        for doc in doctors
+    ])
+
 
 @doctor_bp.route('/', methods=['POST'])
 def add_doctor():
