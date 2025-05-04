@@ -4,6 +4,7 @@ import styles from "../../styles/ContactUs.module.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 
 function ContactUs() {
   const { isSignedIn, user } = useUser();
@@ -81,19 +82,23 @@ function ContactUs() {
   };
 
   return (
-    <div className={styles.backgroundWrapper}>
-      <div className={styles.container}>
-        <ToastContainer />
+    <>
+      <div className={styles.backgroundWrapper}>
+        {/* Add alt and src to avoid error if Image is from 'next/image' */}
+        <Image src="/contact-us.png" alt="Contact Us Background"
+          fill
+          className="img-fluid"
+          objectFit="cover" />
         <h2 className={styles.title}>Contact Us</h2>
+      </div>
         <p className={styles.subtitle}>
-          We’re here to help! Fill out the form below, and we’ll get back to you
-          soon.
+          We’re here to help! Fill out the form below, and we’ll get back to you soon.
         </p>
+        <div className={styles.container}>
+        <ToastContainer />
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor="name" className={styles.label}>
-              Name
-            </label>
+            <label htmlFor="name" className={styles.label}>Name</label>
             <input
               type="text"
               id="name"
@@ -105,10 +110,9 @@ function ContactUs() {
             />
             {errors.name && <p className={styles.error}>{errors.name}</p>}
           </div>
+
           <div className={styles.formGroup}>
-            <label htmlFor="email" className={styles.label}>
-              Email
-            </label>
+            <label htmlFor="email" className={styles.label}>Email</label>
             <input
               type="email"
               id="email"
@@ -120,10 +124,9 @@ function ContactUs() {
             />
             {errors.email && <p className={styles.error}>{errors.email}</p>}
           </div>
+
           <div className={styles.formGroup}>
-            <label htmlFor="phone" className={styles.label}>
-              Phone Number
-            </label>
+            <label htmlFor="phone" className={styles.label}>Phone Number</label>
             <input
               type="tel"
               id="phone"
@@ -135,31 +138,27 @@ function ContactUs() {
             />
             {errors.phone && <p className={styles.error}>{errors.phone}</p>}
           </div>
+
           <div className={styles.formGroup}>
-            <label htmlFor="description" className={styles.label}>
-              Description
-            </label>
+            <label htmlFor="description" className={styles.label}>Message</label>
             <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className={`${styles.textarea} ${
-                errors.description ? styles.errorInput : ""
-              }`}
+              className={`${styles.textarea} ${errors.description ? styles.errorInput : ""}`}
               placeholder="Describe your query or issue"
               rows="5"
             />
-            {errors.description && (
-              <p className={styles.error}>{errors.description}</p>
-            )}
+            {errors.description && <p className={styles.error}>{errors.description}</p>}
           </div>
+
           <button type="submit" className={styles.submitButton}>
             Send Message
           </button>
         </form>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -3,7 +3,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  margin-top: 32px;
+  padding: 1rem 0;
 }
 
 .specialtyCard {

@@ -113,8 +113,8 @@ function DoctorsList() {
 
       <Swiper
         modules={[Navigation]}
-        spaceBetween={30}
-        slidesPerView={3}
+        spaceBetween={20}
+        slidesPerView={4}
         navigation
         breakpoints={{
           320: { slidesPerView: 1 },
@@ -131,7 +131,7 @@ function DoctorsList() {
           </SwiperSlide>
         ) : (
           doctors.map((doctor) => (
-            <SwiperSlide key={doctor.id}>
+            <SwiperSlide key={doctor.id} className="mb-5">
               <div className={styles.doctorCard}>
                 <div className={styles.cardContent}>
                   <div className={styles.imageContainer}>
@@ -139,12 +139,12 @@ function DoctorsList() {
                       src={
                         doctor.image_url && doctor.image_url !== "Not-available"
                           ? doctor.image_url
-                          : "/doctors.jpg"
+                          : "/dummy.png"
                       }
                       alt={doctor.name}
                       className={styles.doctorImage}
                       onError={(e) => {
-                        e.target.src = "/doctors.jpg"; // Fallback image
+                        e.target.src = "/dummy.png"; // Fallback image
                       }}
                     />
                   </div>
@@ -159,27 +159,6 @@ function DoctorsList() {
                   <p className={styles.doctorSpeciality}>{doctor.specialty}</p>
                   <p>{doctor.years_experience} years of experience</p>
                   <p>{doctor.hospital_name}</p>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: "16px",
-                  }}
-                >
-                  <button
-                    style={{
-                      backgroundColor: "#20b2aa",
-                      color: "white",
-                      border: "none",
-                      padding: "10px 20px",
-                      borderRadius: "50px",
-                      cursor: "pointer",
-                      width: "50%",
-                    }}
-                  >
-                    Book now
-                  </button>
                 </div>
               </div>
             </SwiperSlide>

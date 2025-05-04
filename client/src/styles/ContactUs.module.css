@@ -1,102 +1,112 @@
 .backgroundWrapper {
-    background-image: url("/doctors.jpg");
-    background-size: cover;
-    background-position: center;
-    padding: 40px 20px;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .container {
-    max-width: 600px;
-    width: 100%;
-    background: transparent;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-  }
-  
-  .form {
-    background: rgba(255, 255, 255, 0.85);
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .subtitle {
-    font-size: 1.2rem;
-    color: #555;
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  .label {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
-  }
-  
-  .input,
-  .textarea {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-  }
-  
-  .input:focus,
-  .textarea:focus {
-    outline: none;
-    border-color: #20b2aa;
-  }
-  
-  .textarea {
-    resize: vertical;
-  }
-  
-  .errorInput {
-    border-color: #ff4d4f;
-  }
-  
-  .error {
-    color: #ff4d4f;
-    font-size: 0.9rem;
-    margin-top: 4px;
-  }
-  
-  .submitButton {
-    background-color: #20b2aa;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    align-self: center;
-    width: 200px;
-  }
-  
-  .submitButton:hover {
-    background-color: #00796b;
-  }
-  
+  position: relative;
+  width: 100%;
+  height: 305px;
+  overflow: hidden;
+}
+
+.backgroundWrapper h2 {
+  position: absolute;
+  top: 50%;
+  left: 14%;
+  transform: translate(-50%, -50%);
+  color: white;
+  /* Ensure contrast */
+  font-size: 2.5rem;
+  z-index: 2;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  border-radius: 12px;
+  margin: 3rem auto 4.5rem auto;
+  /* Auto margin horizontally centers it */
+  background-color: #20b2ab2a;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+}
+
+.form {
+  background: transparent;
+  padding: 20px;
+  padding-top: 0;
+  border-radius: 8px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #555;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.input,
+.textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border: 3px solid #20b2aa;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.errorInput {
+  border-color: #ff4d4f;
+}
+
+.error {
+  color: #ff4d4f;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.submitButton {
+  background-color: #20b2aa;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 200px;
+}
+
+.submitButton:hover {
+  background-color: #00796b;
+  transform: scale(1.05);
+}

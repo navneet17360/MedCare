@@ -1,12 +1,13 @@
 .doctorsList {
-  padding: 40px;
+  padding: 0px 40px;
 }
 
 .titleContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the title */
   align-items: center;
   margin-bottom: 30px;
+  position: relative; /* Allow absolute positioning for the button */
 }
 
 .title {
@@ -26,6 +27,8 @@
   font-size: 1rem;
   font-weight: 500;
   transition: background-color 0.3s ease;
+  position: absolute;
+  right: 0; /* Align button to the right */
 }
 
 .viewAllButton:hover {
@@ -38,7 +41,7 @@
   border-radius: 12px;
   padding: 16px;
   width: 250px; /* Fixed width */
-  height: 420px; /* Fixed height for consistency */
+  height: 350px; /* Fixed height for consistency */
   text-align: center;
   overflow: hidden;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -90,7 +93,6 @@
   color: #555;
   font-size: 0.9rem;
   margin: 4px 0;
-  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; /* Prevent text wrapping */
@@ -103,8 +105,7 @@
   font-size: 13.5px;
   width: fit-content;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 .bookNowButton {
@@ -124,8 +125,7 @@
   background-color: #00796b;
 }
 
-.doctorCard:hover h5,
-.doctorCard:hover p {
+.doctorCard:hover h5 {
   color: #00796b;
 }
 

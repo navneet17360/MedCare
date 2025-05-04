@@ -1,0 +1,89 @@
+.faqContainer {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .banner {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+  }
+  
+  .bannerText {
+    position: absolute;
+    top: 50%;
+    left: 29%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .bannerText h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+  }
+
+  .accButton {
+    font-size: 1.2rem;
+  }
+
+  .accBody {
+    font-size: 1.2rem;
+  }
+
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .banner {
+      height: 200px;
+    }
+  
+    .bannerText h1 {
+      font-size: 2.5rem;
+    }
+  
+    .container {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  
+    .accordion-button {
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+    }
+  
+    .accordion-body {
+      font-size: 0.85rem;
+      padding: 0.75rem 1rem;
+    }
+  
+    h2.text-center {
+      font-size: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .banner {
+      height: 150px;
+    }
+  
+    .bannerText h1 {
+      font-size: 2rem;
+    }
+  
+    .accordion-button {
+      font-size: 0.85rem;
+    }
+  
+    .accordion-body {
+      font-size: 0.8rem;
+    }
+  
+    h2.text-center {
+      font-size: 1.25rem;
+    }
+  }
+
+  
