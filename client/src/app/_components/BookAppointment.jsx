@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import emailjs from "@emailjs/browser";
@@ -7,63 +6,109 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import styles from "../../styles/BookAppointment.module.css";
-
+ 
+// Utility function to convert 24-hour time to 12-hour with AM/PM
+const formatTimeTo12Hour = (time24) => {
+  if (!time24) return "";
+  const [hours, minutes] = time24.split(":");
+  const hoursNum = parseInt(hours, 10);
+  const period = hoursNum >= 12 ? "PM" : "AM";
+  const hours12 = hoursNum % 12 || 12; // Convert 0 to 12 for midnight
+  return `${hours12}:${minutes} ${period}`;
+};
+ 
+// Utility function to convert 12-hour time to 24-hour
+const convertTo24Hour = (time12, period) => {
+  if (!time12 || !period) return "";
+  const [hours, minutes] = time12.split(":");
+  let hoursNum = parseInt(hours, 10);
+  if (period === "PM" && hoursNum !== 12) hoursNum += 12;
+  if (period === "AM" && hoursNum === 12) hoursNum = 0;
+  return `${hoursNum.toString().padStart(2, "0")}:${minutes}`;
+};
+ 
 function BookAppointment({ doctorId }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     patientName: "",
     date: "",
     time: "",
+    period: "AM",
     doctorId: doctorId ? doctorId.toString() : "",
   });
   const { user } = useUser();
-
+ 
   useEffect(() => {
+    // Initialize EmailJS with public key
+    emailjs.init("dYUrn5Sm0t1bkY2Yk"); // Replace with your EmailJS Public Key
+ 
     if (doctorId) {
       setFormData((prev) => ({ ...prev, doctorId: doctorId.toString() }));
     }
   }, [doctorId]);
-
+ 
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
-
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsSubmitting(true);
+ 
+    if (!user) {
+      toast.error("Please log in first to book an appointment!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setIsSubmitting(false);
+      return;
+    }
+ 
+    const time24 = convertTo24Hour(formData.time, formData.period);
+    if (!time24) {
+      toast.error("Invalid time format. Please enter a valid time.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setIsSubmitting(false);
+      return;
+    }
+ 
     const toEmail =
       user?.primaryEmailAddress?.emailAddress?.trim() || "fallback@example.com";
     const emailData = {
       to_email: toEmail,
       patient_name: formData.patientName,
       appointment_date: formData.date,
-      appointment_time: formData.time,
+      appointment_time: formatTimeTo12Hour(time24),
       doctor_id: formData.doctorId,
+      from_name: "Appointment Team",
     };
-
+ 
     const apiData = {
       patient_name: formData.patientName,
       date: formData.date,
-      time: formData.time,
-      doctor_id: formData.doctorId,
+      time: time24,
+      doctor_id: parseInt(formData.doctorId),
     };
-
+ 
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/api/appointments",
         apiData
       );
       console.log("Booking successful:", response.data);
-
+ 
       emailjs
         .send(
           "service_0wt7ljc", // Replace with your EmailJS Service ID
-          "template_oi5zsvh", // Replace with your EmailJS Template ID
+          "template_oi5zsvh", // Replace with your EmailJS Template ID for booking
           emailData,
           "dYUrn5Sm0t1bkY2Yk" // Replace with your EmailJS Public Key
         )
@@ -71,21 +116,24 @@ function BookAppointment({ doctorId }) {
           (result) => {
             console.log("Email sent successfully:", result.text);
             toast.success(
-              `✅ Appointment booked! Appointment ID: ${response.data.appointment_id}. Confirmation email sent.`
+              `✅ Appointment booked! Appointment ID: ${response.data.appointment_id}. Confirmation email sent.`,
+              { position: "top-right", autoClose: 3000 }
             );
           },
           (error) => {
             console.error("Email sending failed:", error);
             toast.warn(
-              `✅ Appointment booked (ID: ${response.data.appointment_id}), but failed to send email.`
+              `✅ Appointment booked (ID: ${response.data.appointment_id}), but failed to send email.`,
+              { position: "top-right", autoClose: 3000 }
             );
           }
         );
-
+ 
       setFormData({
         patientName: "",
         date: "",
         time: "",
+        period: "AM",
         doctorId: doctorId ? doctorId.toString() : "",
       });
       toggleModal();
@@ -99,17 +147,19 @@ function BookAppointment({ doctorId }) {
       } else {
         errorMessage += error.message;
       }
-      toast.error(errorMessage);
+      toast.error(errorMessage, { position: "top-right", autoClose: 5000 });
       console.error("Booking error:", error, error.response, error.request);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
+ 
   return (
     <div className={styles.container}>
       <button className={styles.bookButton} onClick={toggleModal}>
         Book Appointment
       </button>
-
+ 
       {isOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -147,15 +197,27 @@ function BookAppointment({ doctorId }) {
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="time">Time</label>
-                  <input
-                    type="time"
-                    id="time"
-                    name="time"
-                    value={formData.time}
-                    onChange={handleInputChange}
-                    className={styles.formInput}
-                    required
-                  />
+                  <div className={styles.timeInputContainer}>
+                    <input
+                      type="time"
+                      id="time"
+                      name="time"
+                      value={formData.time}
+                      onChange={handleInputChange}
+                      className={styles.formInput}
+                      required
+                    />
+                    <select
+                      name="period"
+                      value={formData.period}
+                      onChange={handleInputChange}
+                      className={styles.formInput}
+                      required
+                    >
+                      <option value="AM">AM</option>
+                      <option value="PM">PM</option>
+                    </select>
+                  </div>
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="doctorId">Doctor ID</label>
@@ -167,7 +229,7 @@ function BookAppointment({ doctorId }) {
                     onChange={handleInputChange}
                     className={styles.formInput}
                     required
-                    disabled={!!doctorId} // Disable input if doctorId is provided
+                    disabled={!!doctorId}
                   />
                 </div>
                 <div className={styles.modalFooter}>
@@ -178,8 +240,12 @@ function BookAppointment({ doctorId }) {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className={styles.submitButton}>
-                    Book
+                  <button
+                    type="submit"
+                    className={styles.submitButton}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Booking..." : "Book"}
                   </button>
                 </div>
               </form>
@@ -187,10 +253,10 @@ function BookAppointment({ doctorId }) {
           </div>
         </div>
       )}
-
+ 
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
-
+ 
 export default BookAppointment;

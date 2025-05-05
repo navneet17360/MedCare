@@ -8,12 +8,22 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+ 
 function Explore() {
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ 
+  // Function to capitalize the first letter of a string
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+ 
   // Fetch doctors from API using axios
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -35,10 +45,22 @@ function Explore() {
         });
       }
     };
-
+ 
     fetchDoctors();
   }, []);
-
+ 
+  // Handle click on doctor name
+  const handleDoctorClick = (doctorId) => {
+    if (!isSignedIn) {
+      toast.error("Please log in to view doctor details!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } else {
+      router.push(`/our_doctors/${doctorId}`);
+    }
+  };
+ 
   // Group doctors by specialty
   const groupBySpecialty = (doctors) => {
     return doctors.reduce((acc, doctor) => {
@@ -50,9 +72,9 @@ function Explore() {
       return acc;
     }, {});
   };
-
+ 
   const groupedDoctors = groupBySpecialty(doctors);
-
+ 
   if (loading) {
     return (
       <div className={styles.doctorsList}>
@@ -74,7 +96,7 @@ function Explore() {
       </div>
     );
   }
-
+ 
   if (error) {
     return (
       <div className={styles.doctorsList}>
@@ -83,7 +105,7 @@ function Explore() {
       </div>
     );
   }
-
+ 
   return (
     <div className={styles.doctorsList}>
       <ToastContainer />
@@ -95,7 +117,9 @@ function Explore() {
         Object.keys(groupedDoctors).map((specialty) => (
           <div key={specialty} className={styles.specialtySection}>
             <div className={styles.titleContainer}>
-              <h2 className={styles.title}>{specialty}</h2>
+              <h2 className={styles.title}>
+                {capitalizeFirstLetter(specialty)}
+              </h2>
             </div>
             <Swiper
               modules={[Navigation]}
@@ -117,7 +141,7 @@ function Explore() {
                         <img
                           src={
                             doctor.image_url &&
-                              doctor.image_url !== "Not-available"
+                            doctor.image_url !== "Not-available"
                               ? doctor.image_url
                               : "/dummy.png"
                           }
@@ -128,8 +152,16 @@ function Explore() {
                           }}
                         />
                       </div>
-                      <h5>{doctor.name}</h5>
-                      <p>{doctor.specialty}</p>
+                      <h5>
+                        <span
+                          onClick={() => handleDoctorClick(doctor.id)}
+                          className={styles.doctorName}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {doctor.name}
+                        </span>
+                      </h5>
+                      <p>{capitalizeFirstLetter(doctor.specialty)}</p>
                       <p>{doctor.years_experience} years of experience</p>
                       <p>{doctor.hospital_name}</p>
                     </div>
@@ -140,9 +172,7 @@ function Explore() {
                         marginTop: "16px",
                       }}
                     >
-                      <button className={styles.bookNowButton}       >
-                        Book now
-                      </button>
+                      <button className={styles.bookNowButton}>Book now</button>
                     </div>
                   </div>
                 </SwiperSlide>
@@ -151,14 +181,8 @@ function Explore() {
           </div>
         ))
       )}
-      <style jsx>{`
-  .docCard {
-    height: 400px !important; /* Use !important to ensure it overrides other styles */
-  }
-`}</style>
-
     </div>
   );
 }
-
+ 
 export default Explore;
