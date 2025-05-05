@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import {
   SignedOut,
   UserButton,
   useAuth,
-  useUser, // 👈 Import useUser
+  useUser,
 } from "@clerk/nextjs";
 import { toast, ToastContainer } from "react-toastify";
 import styles from "../../styles/header.module.css";
@@ -18,15 +18,16 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
   const { isLoaded, isSignedIn } = useAuth();
-  const { user } = useUser(); // 👈 Get user from useUser
+  const { user } = useUser();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Log the user's email when the user is loaded and signed in
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoaded && isSignedIn && user) {
       console.log("Authenticated user email:", user.primaryEmailAddress?.emailAddress);
     }
-  }, [isLoaded, isSignedIn, user]); // Dependencies for useEffect
+  }, [isLoaded, isSignedIn, user]);
 
   const Menu = [
     { id: 1, name: "Home", path: "/" },
@@ -37,11 +38,10 @@ function Header() {
 
   const handleExploreClick = (e) => {
     e.preventDefault();
-
     if (!isSignedIn) {
       toast.error("Please log in first to explore!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000, // Reduced toast duration
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -49,21 +49,71 @@ function Header() {
         progress: undefined,
       });
     } else {
-      router.push("/explore");
+      setIsLoading(true);
+      router.push("/explore", { scroll: false }); // Disable scroll for faster navigation
     }
   };
 
+  const handleNavigation = (path) => {
+    setIsLoading(true);
+    router.push(path, { scroll: false }); // Disable scroll for faster navigation
+  };
+
+  // Handle route change events with minimal timeout
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      console.log("Route change started");
+      setIsLoading(true);
+    };
+
+    const handleRouteChangeComplete = () => {
+      console.log("Route change completed");
+      setIsLoading(false);
+    };
+
+    const handleRouteChangeError = () => {
+      console.log("Route change error");
+      setIsLoading(false);
+    };
+
+    // Minimal timeout (2 seconds) to prevent spinner from persisting
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        console.warn("Loading timeout reached (2s), hiding spinner.");
+        setIsLoading(false);
+      }
+    }, 2000);
+
+    router.events?.on("routeChangeStart", handleRouteChangeStart);
+    router.events?.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events?.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      clearTimeout(timeout);
+      router.events?.off("routeChangeStart", handleRouteChangeStart);
+      router.events?.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events?.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router, isLoading]);
+
   return (
     <div
-      className="d-flex align-items-center justify-content-between p-4"
+      className="d-flex align-items-center justify-content-between p-4 position-relative"
       style={{
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
       }}
     >
+      {/* Loading Spinner Overlay */}
+      {isLoading && (
+        <div className={styles.loadingOverlay} aria-busy="true">
+          <div className={styles.spinner}></div>
+        </div>
+      )}
+
       <div className="d-flex align-items-center gap-6">
-        <Link href="/">
-          <Image src="/logo.svg" alt="logo" width={180} height={80} />
+        <Link href="/" prefetch={true}>
+          <Image src="/logo.svg" alt="logo" width={180} height={80} priority />
         </Link>
         <ul className="d-none d-md-flex gap-3 list-unstyled">
           {Menu.map((item) => (
@@ -71,7 +121,15 @@ function Header() {
               <Link
                 href={item.path}
                 className={styles.linkText}
-                onClick={item.name === "Explore" ? handleExploreClick : null}
+                prefetch={item.path !== "/appointments"} // Disable prefetch for heavy pages
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (item.name === "Explore") {
+                    handleExploreClick(e);
+                  } else {
+                    handleNavigation(item.path);
+                  }
+                }}
               >
                 {item.name}
               </Link>

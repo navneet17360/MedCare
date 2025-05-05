@@ -99,12 +99,12 @@ function SpecialtyDoctorsPage() {
                       src={
                         doctor.image_url && doctor.image_url !== "Not-available"
                           ? doctor.image_url
-                          : "/doctors.jpg"
+                          : "/dummy.png"
                       }
                       alt={doctor.name}
                       className={styles.doctorImage}
                       onError={(e) => {
-                        e.target.src = "/doctors.jpg"; // Fallback image
+                        e.target.src = "/dummy.png"; // Fallback image
                       }}
                     />
                   </div>
