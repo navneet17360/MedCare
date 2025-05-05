@@ -1,10 +1,10 @@
- 
+
 from app import db
 from flask import Blueprint, jsonify, request
 from models.doctor import Doctor
 
 doctor_bp = Blueprint('doctor_bp', __name__)
- 
+
 # Define routes here
 @doctor_bp.route('/', methods=['GET'])
 def get_doctors():
