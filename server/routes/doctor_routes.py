@@ -1,3 +1,4 @@
+
 from app import db
 from flask import Blueprint, jsonify, request
 from models.doctor import Doctor
@@ -46,7 +47,7 @@ def get_doctors_by_specialty(specialty):
         for doc in doctors
     ])
  
-
+ 
 @doctor_bp.route('/', methods=['POST'])
 def add_doctor():
     data = request.get_json()
@@ -65,12 +66,12 @@ def add_doctor():
     db.session.add(new_doc)
     db.session.commit()
     return jsonify({'message': 'Doctor added successfully'}), 201
-
+ 
 @doctor_bp.route('/<int:id>', methods=['PUT'])
 def update_doctor(id):
     doctor = Doctor.query.get_or_404(id)
     data = request.get_json()
-
+ 
     doctor.name = data.get('name', doctor.name)
     doctor.specialty = data.get('specialty', doctor.specialty)
     doctor.years_experience = data.get('years_experience', doctor.years_experience)
@@ -81,10 +82,10 @@ def update_doctor(id):
     doctor.charges = data.get('charges', doctor.charges)
     doctor.availability = data.get('availability', doctor.availability)
     doctor.image_url=data.get('image_url',doctor.image_url)
-
+ 
     db.session.commit()
     return jsonify({'message': 'Doctor updated successfully'})
-
+ 
 @doctor_bp.route('/<int:id>', methods=['DELETE'])
 def delete_doctor(id):
     doctor = Doctor.query.get_or_404(id)
