@@ -15,7 +15,9 @@ const DoctorDetail = () => {
     const fetchDoctor = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://127.0.0.1:5000/api/doctors");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/doctors`
+        );
         const doctors = response.data;
         const foundDoctor = doctors.find((doc) => doc.id === parseInt(id));
         setDoctor(foundDoctor);

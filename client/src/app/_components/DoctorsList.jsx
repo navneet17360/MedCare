@@ -31,9 +31,12 @@ function DoctorsList() {
     const fetchDoctors = async () => {
       try {
         console.log("Fetching doctors from API...");
-        const response = await axios.get("http://127.0.0.1:5000/api/doctors/", {
-          timeout: 5000, // 5-second timeout
-        });
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/doctors`,
+          {
+            timeout: 5000, // 5-second timeout
+          }
+        );
         console.log("API response:", response.data);
         setDoctors(response.data);
         setLoading(false);

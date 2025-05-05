@@ -7,13 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import dayjs from "dayjs";
 import styles from "../../styles/userAppointments.module.css";
- 
+
 // Utility function to convert 24-hour time to 12-hour with AM/PM
 const formatTimeTo12Hour = (time24) => {
   if (!time24) return "";
   return dayjs(`2023-01-01 ${time24}`).format("h:mm A"); // e.g., "2:30 PM"
 };
- 
+
 // Utility function to convert 12-hour time to 24-hour
 const convertTo24Hour = (hour, minute, period) => {
   if (!hour || !minute || !period) return "";
@@ -22,7 +22,7 @@ const convertTo24Hour = (hour, minute, period) => {
   if (period === "AM" && hoursNum === 12) hoursNum = 0;
   return `${hoursNum.toString().padStart(2, "0")}:${minute}`; // e.g., "14:30"
 };
- 
+
 function UserAppointments() {
   const [appointmentsList, setAppointmentsList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,18 +41,18 @@ function UserAppointments() {
     doctor_id: "",
   });
   const { user } = useUser();
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [appointmentsResponse, doctorsResponse] = await Promise.all([
-          axios.get("http://127.0.0.1:5000/api/appointments"),
-          axios.get("http://127.0.0.1:5000/api/doctors"),
+          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/appointments`),
+          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/doctors`),
         ]);
- 
+
         const appointments = appointmentsResponse.data;
         setDoctors(doctorsResponse.data);
- 
+
         const appointmentsWithDoctorDetails = appointments
           .filter((appointment) => appointment.status !== "Cancelled")
           .map((appointment) => {
@@ -71,7 +71,7 @@ function UserAppointments() {
             const isValidImage =
               doctor.image_url &&
               !invalidImages.includes(doctor.image_url.trim());
- 
+
             return {
               ...appointment,
               doctorName: doctor.name || "Unknown Doctor",
@@ -85,7 +85,7 @@ function UserAppointments() {
                   : appointment.status,
             };
           });
- 
+
         setAppointmentsList(appointmentsWithDoctorDetails);
         setLoading(false);
       } catch (err) {
@@ -93,28 +93,28 @@ function UserAppointments() {
         setLoading(false);
       }
     };
- 
+
     fetchData();
   }, []);
- 
+
   const cancelAppointment = async (id) => {
     try {
       const appointment = appointmentsList.find((appt) => appt.id === id);
       if (!appointment) {
         throw new Error("Appointment not found");
       }
- 
+
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/appointments/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${id}`,
         {
           status: "Cancelled",
         }
       );
- 
+
       const toEmail =
         user?.primaryEmailAddress?.emailAddress?.trim() ||
         "fallback@example.com";
- 
+
       if (
         !appointment.patient_name ||
         !appointment.date ||
@@ -124,7 +124,7 @@ function UserAppointments() {
         console.warn("Missing required appointment data:", appointment);
         throw new Error("Incomplete appointment data for email");
       }
- 
+
       const emailData = {
         to_email: toEmail,
         patient_name: appointment.patient_name,
@@ -133,15 +133,13 @@ function UserAppointments() {
         doctor_name: appointment.doctorName,
         appointment_id: id,
       };
- 
-      console.log("EmailJS emailData:", JSON.stringify(emailData, null, 2));
- 
+
       try {
         const result = await emailjs.send(
-          "service_0wt7ljc", // Replace with your EmailJS Service ID
-          "template_084ed1s", // Replace with your EmailJS Cancel Template ID
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID_2,
           emailData,
-          "dYUrn5Sm0t1bkY2Yk" // Replace with your EmailJS Public Key
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
         );
         console.log("Cancellation email sent successfully:", result);
         toast.success(`✅ Appointment cancelled! Confirmation email sent.`, {
@@ -160,7 +158,7 @@ function UserAppointments() {
           }
         );
       }
- 
+
       setAppointmentsList(
         appointmentsList.filter((appointment) => appointment.id !== id)
       );
@@ -174,7 +172,7 @@ function UserAppointments() {
       });
     }
   };
- 
+
   const openEditModal = (appointment) => {
     setSelectedAppointment(appointment);
     const timeParts = formatTimeTo12Hour(appointment.time).split(" "); // e.g., "2:30 PM" -> ["2:30", "PM"]
@@ -189,18 +187,18 @@ function UserAppointments() {
     });
     setIsModalOpen(true);
   };
- 
+
   const closeEditModal = () => {
     setIsModalOpen(false);
     setSelectedAppointment(null);
     setEditError(null);
   };
- 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
- 
+
   const updateAppointment = async (e) => {
     e.preventDefault();
     try {
@@ -210,7 +208,7 @@ function UserAppointments() {
         formData.period
       );
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/appointments/${selectedAppointment.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/appointments/${selectedAppointment.id}`,
         {
           patient_name: formData.patient_name,
           date: formData.date,
@@ -218,7 +216,7 @@ function UserAppointments() {
           doctor_id: parseInt(formData.doctor_id),
         }
       );
- 
+
       const toEmail =
         user?.primaryEmailAddress?.emailAddress?.trim() ||
         "fallback@example.com";
@@ -234,13 +232,13 @@ function UserAppointments() {
         appointment_id: selectedAppointment.id,
         from_name: "Appointment Team",
       };
- 
+
       emailjs
         .send(
-          "service_0wt7ljc", // Replace with your EmailJS Service ID
-          "template_oi5zsvh", // Replace with your EmailJS Update Template ID
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
           emailData,
-          "dYUrn5Sm0t1bkY2Yk" // Replace with your EmailJS Public Key
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
         )
         .then(
           (result) => {
@@ -264,7 +262,7 @@ function UserAppointments() {
             );
           }
         );
- 
+
       setAppointmentsList((prev) =>
         prev.map((appointment) =>
           appointment.id === selectedAppointment.id
@@ -290,7 +288,7 @@ function UserAppointments() {
             : appointment
         )
       );
- 
+
       closeEditModal();
     } catch (err) {
       setEditError("Failed to update appointment. Please try again.");
@@ -300,11 +298,11 @@ function UserAppointments() {
       });
     }
   };
- 
+
   if (loading)
     return <div className={styles.loading}>Loading appointments...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
- 
+
   return (
     <div className={styles.appointmentsList}>
       <h2 className={styles.title}>Your Appointments</h2>
@@ -359,7 +357,7 @@ function UserAppointments() {
           ))
         )}
       </div>
- 
+
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -463,5 +461,5 @@ function UserAppointments() {
     </div>
   );
 }
- 
+
 export default UserAppointments;

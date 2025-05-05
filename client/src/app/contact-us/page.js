@@ -67,7 +67,7 @@ function ContactUs() {
       try {
         console.log("Submitting form data:", formData);
         const response = await axios.post(
-          "http://127.0.0.1:5000/api/contact-us/",
+          `${process.env.NEXT_PUBLIC_API_URL}/contact-us/`,
           formData
         );
         if (response.status >= 200 && response.status < 300) {
@@ -151,10 +151,13 @@ function ContactUs() {
     <>
       <div className={styles.backgroundWrapper}>
         {/* Add alt and src to avoid error if Image is from 'next/image' */}
-        <Image src="/contact-us.png" alt="Contact Us Background"
+        <Image
+          src="/contact-us.png"
+          alt="Contact Us Background"
           fill
           className="img-fluid"
-          objectFit="cover" />
+          objectFit="cover"
+        />
         <h2 className={styles.title}>Contact Us</h2>
       </div>
       <p className={styles.subtitle}>
@@ -174,8 +177,9 @@ function ContactUs() {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`${styles.input} ${errors.name ? styles.errorInput : ""
-                }`}
+              className={`${styles.input} ${
+                errors.name ? styles.errorInput : ""
+              }`}
               placeholder="Enter your name"
             />
             {errors.name && <p className={styles.error}>{errors.name}</p>}
@@ -190,8 +194,9 @@ function ContactUs() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`${styles.input} ${errors.email ? styles.errorInput : ""
-                }`}
+              className={`${styles.input} ${
+                errors.email ? styles.errorInput : ""
+              }`}
               placeholder="Enter your email"
             />
             {errors.email && <p className={styles.error}>{errors.email}</p>}
@@ -206,8 +211,9 @@ function ContactUs() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`${styles.input} ${errors.phone ? styles.errorInput : ""
-                }`}
+              className={`${styles.input} ${
+                errors.phone ? styles.errorInput : ""
+              }`}
               placeholder="Enter your phone number"
             />
             {errors.phone && <p className={styles.error}>{errors.phone}</p>}
@@ -221,8 +227,9 @@ function ContactUs() {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className={`${styles.textarea} ${errors.description ? styles.errorInput : ""
-                }`}
+              className={`${styles.textarea} ${
+                errors.description ? styles.errorInput : ""
+              }`}
               placeholder="Describe your query or issue"
               rows="5"
             />

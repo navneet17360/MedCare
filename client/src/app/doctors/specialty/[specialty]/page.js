@@ -37,7 +37,7 @@ function SpecialtyDoctorsPage() {
 
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/doctors/specialty/${selectedSpecialty}`
+          `${process.env.NEXT_PUBLIC_API_URL}/doctors/specialty/${selectedSpecialty}`
         );
         setDoctors(response.data); // Assuming the response is a list of doctors
       } catch (err) {

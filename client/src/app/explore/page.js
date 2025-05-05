@@ -10,28 +10,31 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
- 
+
 function Explore() {
   const { isSignedIn } = useAuth();
   const router = useRouter();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
+
   // Function to capitalize the first letter of a string
   const capitalizeFirstLetter = (str) => {
     if (!str) return str;
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
- 
+
   // Fetch doctors from API using axios
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         console.log("Fetching doctors from API...");
-        const response = await axios.get("http://127.0.0.1:5000/api/doctors/", {
-          timeout: 5000, // 5-second timeout
-        });
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/doctors`,
+          {
+            timeout: 5000, // 5-second timeout
+          }
+        );
         console.log("API response:", response.data);
         setDoctors(response.data);
         setLoading(false);
@@ -45,10 +48,10 @@ function Explore() {
         });
       }
     };
- 
+
     fetchDoctors();
   }, []);
- 
+
   // Handle click on doctor name
   const handleDoctorClick = (doctorId) => {
     if (!isSignedIn) {
@@ -60,7 +63,7 @@ function Explore() {
       router.push(`/our_doctors/${doctorId}`);
     }
   };
- 
+
   // Group doctors by specialty
   const groupBySpecialty = (doctors) => {
     return doctors.reduce((acc, doctor) => {
@@ -72,9 +75,9 @@ function Explore() {
       return acc;
     }, {});
   };
- 
+
   const groupedDoctors = groupBySpecialty(doctors);
- 
+
   if (loading) {
     return (
       <div className={styles.doctorsList}>
@@ -96,7 +99,7 @@ function Explore() {
       </div>
     );
   }
- 
+
   if (error) {
     return (
       <div className={styles.doctorsList}>
@@ -105,7 +108,7 @@ function Explore() {
       </div>
     );
   }
- 
+
   return (
     <div className={styles.doctorsList}>
       <ToastContainer />
@@ -165,15 +168,6 @@ function Explore() {
                       <p>{doctor.years_experience} years of experience</p>
                       <p>{doctor.hospital_name}</p>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: "16px",
-                      }}
-                    >
-                      <button className={styles.bookNowButton}>Book now</button>
-                    </div>
                   </div>
                 </SwiperSlide>
               ))}
@@ -184,5 +178,5 @@ function Explore() {
     </div>
   );
 }
- 
+
 export default Explore;
