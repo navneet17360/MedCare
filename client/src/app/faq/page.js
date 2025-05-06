@@ -116,7 +116,7 @@ const FAQ = () => {
         </div>
 
         {/* Call-to-Action Section */}
-        <div className="text-center mt-5">
+        {/* <div className="text-center mt-5">
           <h3>Ready to Get Started?</h3>
           <p>Find a doctor or book an appointment with ease.</p>
           <div className="d-flex justify-content-center gap-3">
@@ -172,7 +172,7 @@ const FAQ = () => {
               Book Appointment
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
       <ToastContainer />
     </div>

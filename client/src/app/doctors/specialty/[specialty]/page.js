@@ -10,11 +10,11 @@ import { useAuth } from "@clerk/nextjs";
 const specialties = [
   "Dental",
   "Cardiology",
-  "Orthopedic",
+  // "Orthopedic",
   "Neurology",
   "Otology",
   "Physician",
-  "Ophthalmology",
+  // "Ophthalmology",
   "Dermatology",
 ];
 

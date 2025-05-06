@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/doctorsList.module.css";
@@ -19,6 +20,7 @@ function DoctorsList() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to capitalize the first letter of a string
   const capitalizeFirstLetter = (str) => {
@@ -53,6 +55,23 @@ function DoctorsList() {
 
     fetchDoctors();
   }, []);
+
+  // Handle route change events for loading state
+  useEffect(() => {
+    const handleRouteChangeStart = () => setIsLoading(true);
+    const handleRouteChangeComplete = () => setIsLoading(false);
+    const handleRouteChangeError = () => setIsLoading(false);
+
+    router.events?.on("routeChangeStart", handleRouteChangeStart);
+    router.events?.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events?.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      router.events?.off("routeChangeStart", handleRouteChangeStart);
+      router.events?.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events?.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router]);
 
   // Function to select 6 doctors: 2 Dental, 2 Neurology, 2 Dermatology, sorted by experience
   const getSelectedDoctors = (doctorsList) => {
@@ -96,6 +115,7 @@ function DoctorsList() {
         autoClose: 3000,
       });
     } else {
+      setIsLoading(true); // Trigger loading state
       router.push(`/our_doctors/${doctorId}`);
     }
   };
@@ -108,6 +128,7 @@ function DoctorsList() {
         autoClose: 3000,
       });
     } else {
+      setIsLoading(true); // Trigger loading state
       router.push("/explore");
     }
   };
@@ -117,8 +138,14 @@ function DoctorsList() {
       <div className={styles.doctorsList}>
         <ToastContainer />
         <div className={styles.titleContainer}>
+          {/* Loading Spinner Overlay for View All Button */}
+          {isLoading && (
+            <div className={styles.loadingOverlay} aria-busy="true" aria-label="Loading">
+              <div className={styles.spinner}></div>
+            </div>
+          )}
           <h2 className={styles.title}>Our Doctors</h2>
-          <button className={styles.viewAllButton} disabled>
+          <button className={styles.viewAllButton} onClick={handleViewAllClick}>
             View All
           </button>
         </div>
@@ -151,13 +178,24 @@ function DoctorsList() {
   }
 
   if (error) {
-    return <div className={styles.doctorsList}>Error: {error}</div>;
+    return (
+      <div className={styles.doctorsList}>
+        <ToastContainer />
+        Error: {error}
+      </div>
+    );
   }
 
   return (
     <div className={styles.doctorsList}>
       <ToastContainer />
       <div className={styles.titleContainer}>
+        {/* Loading Spinner Overlay for View All Button */}
+        {isLoading && (
+          <div className={styles.loadingOverlay} aria-busy="true" aria-label="Loading">
+            <div className={styles.spinner}></div>
+          </div>
+        )}
         <h2 className={styles.title}>Our Doctors</h2>
         <button className={styles.viewAllButton} onClick={handleViewAllClick}>
           View All

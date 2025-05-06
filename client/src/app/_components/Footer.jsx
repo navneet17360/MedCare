@@ -81,13 +81,6 @@ function Footer() {
 
   return (
     <>
-      {/* Loading Spinner Overlay */}
-      {isLoading && (
-        <div className={styles.loadingOverlay} aria-busy="true">
-          <div className={styles.spinner}></div>
-        </div>
-      )}
-
       {/* Health Section */}
       <div
         className={`container py-md-4 my-md-5 position-relative ${styles.mobileHealthContainer}`}
@@ -159,6 +152,12 @@ function Footer() {
 
             {/* Navigation Links Column */}
             <div className="col-12 col-md-2 mb-4">
+              {/* Loading Spinner Overlay */}
+              {isLoading && (
+                <div className={styles.loadingOverlay} aria-busy="true">
+                  <div className={styles.spinner}></div>
+                </div>
+              )}
               <h5 className="mb-3">Quick Links</h5>
               <ul className="list-unstyled">
                 {navLinks.map(({ name, path }, index) => (
@@ -166,12 +165,8 @@ function Footer() {
                     <Link
                       href={path}
                       className={styles.footerLink}
-                      prefetch={name !== "Appointment"} // Disable prefetch for heavy pages
-                      onClick={
-                        name === "Find a Doctor" || name === "Appointment"
-                          ? (e) => handleProtectedClick(e, path)
-                          : undefined
-                      }
+                      prefetch={true}
+                      onClick={() => setIsLoading(true)}
                     >
                       {name}
                     </Link>
@@ -182,6 +177,12 @@ function Footer() {
 
             {/* Support Links Column */}
             <div className="col-12 col-md-2 mb-4">
+              {/* Loading Spinner Overlay */}
+              {isLoading && (
+                <div className={styles.loadingOverlay} aria-busy="true">
+                  <div className={styles.spinner}></div>
+                </div>
+              )}
               <h5 className="mb-3">Support</h5>
               <ul className="list-unstyled">
                 {supportLinks.map(({ name, path }, index) => (
@@ -190,6 +191,7 @@ function Footer() {
                       href={path}
                       className={styles.footerLink}
                       prefetch={true}
+                      onClick={() => setIsLoading(true)}
                     >
                       {name}
                     </Link>
