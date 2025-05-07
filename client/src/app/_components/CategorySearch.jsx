@@ -22,7 +22,7 @@ function CategorySearch() {
     { name: "Neurology", icon: "/icons/brain.svg" },
     { name: "Otology", icon: "/icons/ear.svg" },
     { name: "Physician", icon: "/icons/physician.svg" },
-    { name: "Ophthalmology", icon: "/icons/eye.svg" },
+    // { name: "Ophthalmology", icon: "/icons/eye.svg" },
   ];
 
   const handleSpecialtyClick = (e) => {

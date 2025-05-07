@@ -25,7 +25,10 @@ function Header() {
   // Log the user's email when the user is loaded and signed in
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {
-      console.log("Authenticated user email:", user.primaryEmailAddress?.emailAddress);
+      console.log(
+        "Authenticated user email:",
+        user.primaryEmailAddress?.emailAddress
+      );
     }
   }, [isLoaded, isSignedIn, user]);
 

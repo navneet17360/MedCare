@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/doctorsList.module.css";
@@ -17,6 +18,7 @@ function Explore() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to capitalize the first letter of a string
   const capitalizeFirstLetter = (str) => {
@@ -52,6 +54,23 @@ function Explore() {
     fetchDoctors();
   }, []);
 
+  // Handle route change events for loading state
+  useEffect(() => {
+    const handleRouteChangeStart = () => setIsLoading(true);
+    const handleRouteChangeComplete = () => setIsLoading(false);
+    const handleRouteChangeError = () => setIsLoading(false);
+
+    router.events?.on("routeChangeStart", handleRouteChangeStart);
+    router.events?.on("routeChangeComplete", handleRouteChangeComplete);
+    router.events?.on("routeChangeError", handleRouteChangeError);
+
+    return () => {
+      router.events?.off("routeChangeStart", handleRouteChangeStart);
+      router.events?.off("routeChangeComplete", handleRouteChangeComplete);
+      router.events?.off("routeChangeError", handleRouteChangeError);
+    };
+  }, [router]);
+
   // Handle click on doctor name
   const handleDoctorClick = (doctorId) => {
     if (!isSignedIn) {
@@ -60,6 +79,7 @@ function Explore() {
         autoClose: 3000,
       });
     } else {
+      setIsLoading(true); // Trigger loading state
       router.push(`/our_doctors/${doctorId}`);
     }
   };
@@ -112,6 +132,12 @@ function Explore() {
   return (
     <div className={styles.doctorsList}>
       <ToastContainer />
+      {/* Single Loading Spinner Overlay for the entire component */}
+      {isLoading && (
+        <div className={styles.loadingOverlay} aria-busy="true" aria-label="Loading">
+          <div className={styles.spinner}></div>
+        </div>
+      )}
       {Object.keys(groupedDoctors).length === 0 ? (
         <div className={styles.titleContainer}>
           <h2 className={styles.title}>No Doctors Available</h2>
