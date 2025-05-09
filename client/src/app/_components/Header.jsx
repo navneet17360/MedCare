@@ -44,7 +44,7 @@ function Header() {
     if (!isSignedIn) {
       toast.error("Please log in first to explore!", {
         position: "top-right",
-        autoClose: 2000, // Reduced toast duration
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -53,13 +53,13 @@ function Header() {
       });
     } else {
       setIsLoading(true);
-      router.push("/explore", { scroll: false }); // Disable scroll for faster navigation
+      router.push("/explore", { scroll: false });
     }
   };
 
   const handleNavigation = (path) => {
     setIsLoading(true);
-    router.push(path, { scroll: false }); // Disable scroll for faster navigation
+    router.push(path, { scroll: false });
   };
 
   // Handle route change events with minimal timeout
@@ -115,7 +115,14 @@ function Header() {
       )}
 
       <div className="d-flex align-items-center gap-6">
-        <Link href="/" prefetch={true}>
+        <Link
+          href="/"
+          prefetch={true}
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavigation("/");
+          }}
+        >
           <Image src="/logo.svg" alt="logo" width={180} height={80} priority />
         </Link>
         <ul className="d-none d-md-flex gap-3 list-unstyled">
@@ -124,7 +131,7 @@ function Header() {
               <Link
                 href={item.path}
                 className={styles.linkText}
-                prefetch={item.path !== "/appointments"} // Disable prefetch for heavy pages
+                prefetch={item.path !== "/appointments"}
                 onClick={(e) => {
                   e.preventDefault();
                   if (item.name === "Explore") {
